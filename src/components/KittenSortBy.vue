@@ -1,5 +1,5 @@
 <template>
-  <div class="sort-by-container ">
+  <div class="sort-by-container">
     <div class="sort-by-name-age">
       <label>
         <input type="radio" value="name" v-model="sortCriteria" @change="handleOnSortChange" />

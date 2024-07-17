@@ -1,19 +1,19 @@
 .sort-by-name-age,
 .sort-by-asc-desc {
-    display: flex;
-    flex-direction: column;
-    align-items: left;
-    justify-content: left;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  justify-content: left;
 }
 
 .sort-by-container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 2em;
-    padding: 1em;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2em;
+  padding: 1em;
 
-    input[type="radio"] {
-        accent-color: #000;
-    }
+  input[type='radio'] {
+    accent-color: #000;
+  }
 }

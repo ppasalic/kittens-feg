@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <h1>Kitten List</h1>
     <KittensSortBy @sort-by="handleOnSortChange" />
     <div class="kitten-list">
@@ -19,7 +19,7 @@
 <script lang="ts">
 import { ref, onMounted, defineComponent } from 'vue';
 import KittenCard from '../components/KittenCard.vue';
-import KittensSortBy from "../components/KittenSortBy.vue";
+import KittensSortBy from '../components/KittenSortBy.vue';
 
 interface Kitten {
   id: number;
@@ -37,55 +37,61 @@ interface SortOptions {
 export default defineComponent({
   components: {
     KittenCard,
-    KittensSortBy,
+    KittensSortBy
   },
   setup() {
     const kittens = ref<Kitten[]>([]);
     const visibleKittens = ref<Kitten[]>([]);
     const showButton = ref<boolean>(false);
     const sortOptions = ref<SortOptions>({ sortCriteria: 'name', sortOrder: 'asc' });
+    const showMoreCards = ref<number>(20);
 
     onMounted(async () => {
       try {
         const response = await fetch('/kittens.json');
         const data = await response.json();
-        kittens.value = await Promise.all(data.kittens.map(async (kitten: Kitten) => {
-          try {
-            const imagePath = await import(`@/assets/images/${kitten.name}.png`);
-            return {
-              ...kitten,
-              image: imagePath.default || '',
-            };
-          } catch (e) {
-            return {
-              ...kitten,
-              image: '',
-            };
-          }
-        }));
-        sortKittens();
+        kittens.value = await Promise.all(
+          data.kittens.map(async (kitten: Kitten) => {
+            try {
+              const imagePath = await import(`@/assets/images/${kitten.name}.png`);
+              return {
+                ...kitten,
+                image: imagePath.default || ''
+              };
+            } catch (e) {
+              return {
+                ...kitten,
+                image: ''
+              };
+            }
+          })
+        );
         updateVisibleKittens();
+        sortKittens();
       } catch (e) {
         console.error('Failed to fetch kittens data:', e);
       }
     });
 
     const updateVisibleKittens = () => {
-      const numberOfShownCards = 20;
-      visibleKittens.value = kittens.value.slice(0, visibleKittens.value.length + numberOfShownCards);
+      visibleKittens.value = kittens.value.slice(
+        0,
+        visibleKittens.value.length + showMoreCards.value
+      );
       showButton.value = visibleKittens.value.length < kittens.value.length;
     };
 
     const sortKittens = () => {
       const { sortCriteria, sortOrder } = sortOptions.value;
-      kittens.value.sort((a, b) => {
+      visibleKittens.value.sort((a, b) => {
         if (sortCriteria === 'name') {
           return sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
         } else {
-          return sortOrder === 'asc' ? parseInt(a.age) - parseInt(b.age) : parseInt(b.age) - parseInt(a.age);
+          return sortOrder === 'asc'
+            ? parseInt(a.age) - parseInt(b.age)
+            : parseInt(b.age) - parseInt(a.age);
         }
       });
-      updateVisibleKittens();
     };
 
     const handleOnShowMoreClick = () => {
@@ -98,7 +104,7 @@ export default defineComponent({
     };
 
     return { visibleKittens, showButton, handleOnShowMoreClick, handleOnSortChange };
-  },
+  }
 });
 </script>
 

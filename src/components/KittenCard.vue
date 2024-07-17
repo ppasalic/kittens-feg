@@ -1,7 +1,7 @@
 <template>
-  <div class="card" style="cursor: pointer;">
+  <div class="card" style="cursor: pointer">
     <div class="card-image">
-      <img class="kitten-img bg-white" style="display: block" :src="kitten.image" alt="Kitten"/>
+      <img class="kitten-img bg-white" style="display: block" :src="kitten.image" alt="Kitten" />
     </div>
     <div class="card-description">
       <h1>Name: {{ kitten.name }}</h1>
@@ -12,14 +12,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, type PropType } from 'vue'
+import { defineComponent, type PropType } from 'vue';
 
 interface Kitten {
-  id: number
-  name: string
-  color: string
-  age: string
-  image?: string
+  id: number;
+  name: string;
+  color: string;
+  age: string;
+  image?: string;
 }
 
 export default defineComponent({
@@ -29,7 +29,7 @@ export default defineComponent({
       required: true
     }
   }
-})
+});
 </script>
 
 <style lang="scss">
