@@ -121,10 +121,7 @@ export default defineComponent({
     watch(
       sortOptions,
       () => {
-        if (!isSortResetting.value) {
-          sortKittens();
-          updateVisibleKittens(true);
-        }
+        sortKittens();
       },
       { deep: true }
     );
