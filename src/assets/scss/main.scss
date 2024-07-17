@@ -1,0 +1,74 @@
+@import "./global.scss";
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap");
+
+#app {
+  max-width: 1280px;
+  font-weight: normal;
+  font-size: 16px;
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+}
+
+body {
+  font-family: "Roboto", sans-serif;
+  background-color: $primary-100;
+  color: #000;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+div {
+  font-family: "Roboto", sans-serif;
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+    justify-content: center;
+  }
+
+  #app {
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+  }
+}
+
+button {
+  background-color: $primary-500;
+  border-radius: 8px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  height: 40px;
+  line-height: 20px;
+  list-style: none;
+  margin: 0;
+  outline: none;
+  padding: 10px 16px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: color 100ms;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+button:hover,
+button:focus {
+  background-color: $primary-200;
+}
