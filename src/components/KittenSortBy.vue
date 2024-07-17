@@ -2,21 +2,45 @@
   <div class="sort-by-container">
     <div class="sort-by-name-age">
       <label>
-        <input type="radio" value="name" v-model="sortCriteria" @change="handleOnSortChange" />
+        <input
+          type="radio"
+          value="name"
+          name="name-age-sort"
+          v-model="sortCriteria"
+          @change="handleOnSortChange"
+        />
         Name
       </label>
       <label>
-        <input type="radio" value="age" v-model="sortCriteria" @change="handleOnSortChange" />
+        <input
+          type="radio"
+          value="age"
+          name="name-age-sort"
+          v-model="sortCriteria"
+          @change="handleOnSortChange"
+        />
         Age
       </label>
     </div>
     <div class="sort-by-asc-desc">
       <label>
-        <input type="radio" value="asc" v-model="sortOrder" @change="handleOnSortChange" />
+        <input
+          type="radio"
+          value="asc"
+          name="asc-desc-sort"
+          v-model="sortOrder"
+          @change="handleOnSortChange"
+        />
         Ascending
       </label>
       <label>
-        <input type="radio" value="desc" v-model="sortOrder" @change="handleOnSortChange" />
+        <input
+          type="radio"
+          value="desc"
+          name="asc-desc-sort"
+          v-model="sortOrder"
+          @change="handleOnSortChange"
+        />
         Descending
       </label>
     </div>
@@ -30,14 +54,14 @@ export default defineComponent({
   name: 'KittensSortBy',
   emits: ['sort-by'],
   setup(_, { emit }) {
-    const sortCriteria = ref<string>('name');
+    const sortCriteria = ref<string>('age');
     const sortOrder = ref<string>('asc');
 
     const handleOnSortChange = () => {
-      emit('sort-by', { sortCriteria: sortCriteria.value, sortOrder: sortOrder.value });
+      emit('sort-by', { sortCriteria: sortCriteria, sortOrder: sortOrder });
     };
 
-    watch([sortCriteria, sortOrder], handleOnSortChange, { deep: true });
+    watch([sortCriteria, sortOrder], handleOnSortChange, { immediate: true });
 
     return { sortCriteria, sortOrder, handleOnSortChange };
   }
