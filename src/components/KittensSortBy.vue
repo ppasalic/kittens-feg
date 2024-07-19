@@ -1,48 +1,52 @@
 <template>
   <div class="sort-by-container">
     <div class="sort-by-name-age">
-      <label>
+      <div class="sort-by-radio">
         <input
           type="radio"
+          id="name"
           value="name"
           name="name-age-sort"
           v-model="sortCriteria"
           @change="handleOnSortChange"
         />
-        Name
-      </label>
-      <label>
+        <label for="name">Name</label>
+      </div>
+      <div class="sort-by-radio">
         <input
           type="radio"
+          id="age"
           value="age"
           name="name-age-sort"
           v-model="sortCriteria"
           @change="handleOnSortChange"
         />
-        Age
-      </label>
+        <label for="age">Age</label>
+      </div>
     </div>
     <div class="sort-by-asc-desc">
-      <label>
+      <div class="sort-by-radio">
         <input
           type="radio"
+          id="asc"
           value="asc"
           name="asc-desc-sort"
           v-model="sortOrder"
           @change="handleOnSortChange"
         />
-        Ascending
-      </label>
-      <label>
+        <label for="asc">Ascending</label>
+      </div>
+      <div class="sort-by-radio">
         <input
           type="radio"
+          id="desc"
           value="desc"
           name="asc-desc-sort"
           v-model="sortOrder"
           @change="handleOnSortChange"
         />
-        Descending
-      </label>
+        <label for="desc">Descending</label>
+      </div>
     </div>
   </div>
 </template>
