@@ -86,16 +86,11 @@ export default defineComponent({
       const currentLength = reset ? 0 : visibleKittens.value.length;
       visibleKittens.value = filteredKittens.value.slice(0, currentLength + showMoreCards.value);
       showButton.value = visibleKittens.value.length < filteredKittens.value.length;
-
-      if (showButton.value === false) {
-        isSortResetting.value = true;
-        sortOptions.value.sortCriteria = 'age';
-        sortOptions.value.sortOrder = 'asc';
-      }
     };
 
     const sortKittens = () => {
       const { sortCriteria, sortOrder } = sortOptions.value;
+
       filteredKittens.value.sort((a, b) => {
         if (sortCriteria === 'name') {
           return sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
@@ -105,7 +100,6 @@ export default defineComponent({
             : parseInt(b.age) - parseInt(a.age);
         }
       });
-      updateVisibleKittens(true);
     };
 
     const filterKittens = () => {
@@ -178,6 +172,15 @@ export default defineComponent({
       filterOptions.value = filters;
       applyFiltersAndSorting();
     };
+
+    watch(showButton, (newValue) => {
+      if (!newValue) {
+        isSortResetting.value = true;
+        sortOptions.value.sortCriteria = 'age';
+        sortOptions.value.sortOrder = 'asc';
+        applyFiltersAndSorting();
+      }
+    });
 
     watch(
       [sortOptions, filterOptions],
