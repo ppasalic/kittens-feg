@@ -4,7 +4,7 @@
       "id": 1,
       "name": "Fluffy",
       "color": "White",
-      "age": "2 months"
+      "age": "8 months"
     },
     {
       "id": 2,
@@ -14,9 +14,9 @@
     },
     {
       "id": 3,
-      "name": "Shadow",
-      "color": "Black",
-      "age": "1 month"
+      "name": "Mike",
+      "color": "Orange",
+      "age": "5 month"
     },
     {
       "id": 4,
@@ -26,7 +26,7 @@
     },
     {
       "id": 5,
-      "name": "Tiger",
+      "name": "Bobi",
       "color": "Orange",
       "age": "2 months"
     },
@@ -40,85 +40,85 @@
       "id": 7,
       "name": "Luna",
       "color": "Black",
-      "age": "1 month"
+      "age": "5 month"
     },
     {
       "id": 8,
       "name": "Bella",
       "color": "White",
-      "age": "2 months"
+      "age": "6 months"
     },
     {
       "id": 9,
-      "name": "Chloe",
-      "color": "Brown",
-      "age": "3 months"
+      "name": "Chandler",
+      "color": "White and Gray",
+      "age": "9 months"
     },
     {
       "id": 10,
-      "name": "Coco",
-      "color": "Black",
-      "age": "4 months"
+      "name": "Garfield",
+      "color": "Orange",
+      "age": "3 months"
     },
     {
       "id": 11,
       "name": "Nala",
       "color": "Orange",
-      "age": "2 months"
+      "age": "11 months"
     },
     {
       "id": 12,
       "name": "Simba",
-      "color": "Brown",
-      "age": "3 months"
+      "color": "White and Orange",
+      "age": "5 months"
     },
     {
       "id": 13,
       "name": "Oreo",
       "color": "Black and White",
-      "age": "1 month"
+      "age": "3 month"
     },
     {
       "id": 14,
       "name": "Milo",
-      "color": "Gray",
-      "age": "2 months"
+      "color": "Black and Orange",
+      "age": "4 months"
     },
     {
       "id": 15,
       "name": "Zoe",
       "color": "White",
-      "age": "3 months"
+      "age": "14 months"
     },
     {
       "id": 16,
-      "name": "Loki",
-      "color": "Black",
-      "age": "4 months"
+      "name": "Chanel",
+      "color": "White",
+      "age": "15 months"
     },
     {
       "id": 17,
-      "name": "Jack",
-      "color": "Gray",
-      "age": "2 months"
+      "name": "Pretty",
+      "color": "Gray and Brown",
+      "age": "12 months"
     },
     {
       "id": 18,
-      "name": "Sophie",
+      "name": "Coco",
       "color": "Brown",
-      "age": "3 months"
+      "age": "13 months"
     },
     {
       "id": 19,
       "name": "Daisy",
       "color": "White",
-      "age": "1 month"
+      "age": "6 month"
     },
     {
       "id": 20,
       "name": "Toby",
       "color": "Orange",
-      "age": "2 months"
+      "age": "15 months"
     },
     {
       "id": 21,
@@ -128,122 +128,122 @@
     },
     {
       "id": 22,
-      "name": "Lily",
-      "color": "White",
-      "age": "3 months"
+      "name": "Monica",
+      "color": "White and Gray and Orange",
+      "age": "2 months"
     },
     {
       "id": 23,
       "name": "Charlie",
       "color": "Brown",
-      "age": "4 months"
+      "age": "1 months"
     },
     {
       "id": 24,
-      "name": "Oliver",
-      "color": "Black",
-      "age": "2 months"
+      "name": "Ross",
+      "color": "White and Gray",
+      "age": "8 months"
     },
     {
       "id": 25,
-      "name": "Lucy",
+      "name": "Cloudy",
       "color": "Gray",
-      "age": "3 months"
+      "age": "15 months"
     },
     {
       "id": 26,
-      "name": "Toby",
-      "color": "Orange",
+      "name": "Princess",
+      "color": "Brown and Orange and White",
       "age": "2 months"
     },
     {
       "id": 27,
-      "name": "Max",
+      "name": "Katy",
       "color": "Gray",
-      "age": "11 months"
+      "age": "5 months"
     },
     {
       "id": 28,
-      "name": "Lily",
-      "color": "White",
-      "age": "6 months"
+      "name": "Phoebe",
+      "color": "Brown",
+      "age": "2 months"
     },
     {
       "id": 29,
-      "name": "Charlie",
-      "color": "Brown",
+      "name": "Cookie",
+      "color": "Jack",
       "age": "1 months"
     },
     {
       "id": 30,
       "name": "Oliver",
-      "color": "Black",
+      "color": "Gray",
       "age": "6 months"
     },
     {
       "id": 31,
-      "name": "Lucy",
+      "name": "Hulk",
+      "color": "Gray",
+      "age": "12 months"
+    },
+    {
+      "id": 32,
+      "name": "Rachel",
+      "color": "Orange",
+      "age": "3 months"
+    },
+    {
+      "id": 33,
+      "name": "Mimi",
+      "color": "Orange",
+      "age": "2 months"
+    },
+    {
+      "id": 34,
+      "name": "Snowflake",
+      "color": "White",
+      "age": "4 months"
+    },
+    {
+      "id": 35,
+      "name": "Joe",
       "color": "Gray",
       "age": "7 months"
     },
     {
-      "id": 32,
-      "name": "Lily",
-      "color": "White",
-      "age": "8 months"
-    },
-    {
-      "id": 33,
-      "name": "Charlie",
-      "color": "Brown",
-      "age": "9 months"
-    },
-    {
-      "id": 34,
-      "name": "Oliver",
-      "color": "Black",
-      "age": "10 months"
-    },
-    {
-      "id": 35,
-      "name": "Lucy",
-      "color": "Gray",
-      "age": "11 months"
-    },
-    {
       "id": 36,
-      "name": "Toby",
+      "name": "Tiger",
       "color": "Orange",
-      "age": "12 months"
+      "age": "7 months"
     },
     {
       "id": 37,
-      "name": "Max",
-      "color": "Gray",
-      "age": "13 months"
+      "name": "Batman",
+      "color": "Black",
+      "age": "1 months"
     },
     {
       "id": 38,
       "name": "Lily",
       "color": "White",
-      "age": "10 months"
+      "age": "1 months"
     },
     {
       "id": 39,
-      "name": "Charlie",
-      "color": "Brown",
-      "age": "4 months"
+      "name": "Jaquline",
+      "color": "White and Orange",
+      "age": "7 months"
     },
     {
       "id": 40,
-      "name": "Oliver",
+      "name": "Joey",
       "color": "Black",
       "age": "2 months"
     },
     {
       "id": 41,
-      "name": "Lucy",
-      "color": "Gray",
+      "name": "Loca",
+      "color": "Orange and Black and White",
       "age": "3 months"
     }
   ]
