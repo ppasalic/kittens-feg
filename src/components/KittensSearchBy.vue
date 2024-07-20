@@ -23,7 +23,6 @@ export default defineComponent({
     const searchTerm = ref<string>('');
 
     const handleOnSearchInput = () => {
-      console.log('Emitting search term:', searchTerm.value); // Debugging line
       emit('search-by', {
         searchTerm: searchTerm.value
       });

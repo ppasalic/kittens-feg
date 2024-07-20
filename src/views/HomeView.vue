@@ -1,6 +1,7 @@
 <template>
   <div class="home-page-container">
-    <h1>Kitten List</h1>
+    <h1>Kitten adoption</h1>
+    <KittensCarousel :carouselKittens="carouselKittens.kittens" />
     <KittensSortBy @sort-by="handleOnSortChange" />
     <KittensFilterBy @filter-by="handleOnFilterCheck" />
     <KittensSearchBy @search-by="handleOnSearchInput" />
@@ -24,8 +25,9 @@ import KittenCard from '../components/KittenCard.vue';
 import KittensSortBy from '../components/KittensSortBy.vue';
 import KittensFilterBy from '../components/KittensFilterBy.vue';
 import KittensSearchBy from '../components/KittensSearchBy.vue';
+import KittensCarousel from '../components/KittensCarousel.vue';
 
-interface Kitten {
+export interface Kitten {
   id: number;
   name: string;
   color: string;
@@ -46,8 +48,13 @@ interface SearchTerm {
   searchTerm: string;
 }
 
+interface CarouselSlide {
+  kittens: Kitten[];
+}
+
 export default defineComponent({
   components: {
+    KittensCarousel,
     KittenCard,
     KittensSortBy,
     KittensFilterBy,
@@ -62,7 +69,8 @@ export default defineComponent({
     const showMoreCards = ref<number>(20);
     const isSortResetting = ref<boolean>(false);
     const filterOptions = ref<FilterOptions>({ filters: [] });
-    const searchTerm = ref<SearchTerm>({ searchTerm: '' }); // State for search term
+    const searchTerm = ref<SearchTerm>({ searchTerm: '' });
+    const carouselKittens = ref<CarouselSlide>({ kittens: [] });
 
     onMounted(async () => {
       try {
@@ -71,7 +79,7 @@ export default defineComponent({
         kittens.value = await Promise.all(
           data.kittens.map(async (kitten: Kitten) => {
             try {
-              const imagePath = await import(`@/assets/images/${kitten.name}.png`);
+              const imagePath = await import(`@/assets/images/${kitten.name}.jpg`);
               return {
                 ...kitten,
                 image: imagePath.default || ''
@@ -85,6 +93,7 @@ export default defineComponent({
           })
         );
         applyFiltersAndSorting();
+        getCarouselKittens();
       } catch (e) {
         console.error('Failed to fetch kittens data:', e);
       }
@@ -192,6 +201,15 @@ export default defineComponent({
       applyFiltersAndSorting();
     };
 
+    const getCarouselKittens = () => {
+      const kittensSortedByAge: Kitten[] = [...kittens.value].sort(
+        (a, b) => parseInt(a.age) - parseInt(b.age)
+      );
+      carouselKittens.value.kittens = kittensSortedByAge
+        .slice(0, 4)
+        .map((kitten: Kitten) => ({ ...kitten }));
+    };
+
     watch(showButton, (newValue) => {
       if (!newValue) {
         isSortResetting.value = true;
@@ -212,10 +230,12 @@ export default defineComponent({
     return {
       visibleKittens,
       showButton,
+      carouselKittens,
       handleOnShowMoreClick,
       handleOnSortChange,
       handleOnFilterCheck,
-      handleOnSearchInput
+      handleOnSearchInput,
+      getCarouselKittens
     };
   }
 });
