@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div class="home-page-container">
     <h1>Kitten List</h1>
     <KittensSortBy @sort-by="handleOnSortChange" />
     <KittensFilterBy @filter-by="handleOnFilterCheck" />
+    <KittensSearchBy @search-by="handleOnSearchInput" />
     <div class="kitten-list">
       <KittenCard
         v-for="kitten in visibleKittens"
@@ -22,6 +23,7 @@ import { ref, onMounted, defineComponent, watch } from 'vue';
 import KittenCard from '../components/KittenCard.vue';
 import KittensSortBy from '../components/KittensSortBy.vue';
 import KittensFilterBy from '../components/KittensFilterBy.vue';
+import KittensSearchBy from '../components/KittensSearchBy.vue';
 
 interface Kitten {
   id: number;
@@ -40,11 +42,16 @@ interface FilterOptions {
   filters: string[];
 }
 
+interface SearchTerm {
+  searchTerm: string;
+}
+
 export default defineComponent({
   components: {
     KittenCard,
     KittensSortBy,
-    KittensFilterBy
+    KittensFilterBy,
+    KittensSearchBy
   },
   setup() {
     const kittens = ref<Kitten[]>([]);
@@ -55,6 +62,7 @@ export default defineComponent({
     const showMoreCards = ref<number>(20);
     const isSortResetting = ref<boolean>(false);
     const filterOptions = ref<FilterOptions>({ filters: [] });
+    const searchTerm = ref<SearchTerm>({ searchTerm: '' }); // State for search term
 
     onMounted(async () => {
       try {
@@ -103,7 +111,7 @@ export default defineComponent({
     };
 
     const filterKittens = () => {
-      if (filterOptions.value.filters.length > 0) {
+      if (filterOptions.value.filters.length > 0 || searchTerm.value) {
         filteredKittens.value = kittens.value.filter((kitten: Kitten) => {
           const ageInMonths = parseInt(kitten.age.split(' ')[0]);
           const meetsAgeCriteria =
@@ -112,7 +120,13 @@ export default defineComponent({
           const meetsColorCriteria =
             filterOptions.value.filters.includes('blackColor') && kitten.color === 'Black';
 
-          if (filterOptions.value.filters.length === 0) {
+          const searchWord = searchTerm.value.searchTerm.toLowerCase();
+          const matchesSearchTerm = kitten.name.toLowerCase().includes(searchWord);
+
+          if (
+            filterOptions.value.filters.length === 0 &&
+            searchTerm.value.searchTerm.trim() === ''
+          ) {
             return true;
           }
 
@@ -120,29 +134,29 @@ export default defineComponent({
             filterOptions.value.filters.includes('youngerThan6Months') &&
             filterOptions.value.filters.includes('blackColor')
           ) {
-            return ageInMonths < 6 && kitten.color === 'Black';
+            return ageInMonths < 6 && kitten.color === 'Black' && matchesSearchTerm;
           }
 
           if (
             filterOptions.value.filters.includes('youngerThan12Months') &&
             filterOptions.value.filters.includes('blackColor')
           ) {
-            return ageInMonths < 12 && kitten.color === 'Black';
+            return ageInMonths < 12 && kitten.color === 'Black' && matchesSearchTerm;
           }
 
           if (filterOptions.value.filters.includes('youngerThan6Months')) {
-            return ageInMonths < 6;
+            return ageInMonths < 6 && matchesSearchTerm;
           }
 
           if (filterOptions.value.filters.includes('youngerThan12Months')) {
-            return ageInMonths < 12;
+            return ageInMonths < 12 && matchesSearchTerm;
           }
 
           if (filterOptions.value.filters.includes('blackColor')) {
-            return kitten.color === 'Black';
+            return kitten.color === 'Black' && matchesSearchTerm;
           }
 
-          return meetsAgeCriteria || meetsColorCriteria;
+          return meetsAgeCriteria || meetsColorCriteria || matchesSearchTerm;
         });
       } else {
         filteredKittens.value = [...kittens.value];
@@ -173,6 +187,11 @@ export default defineComponent({
       applyFiltersAndSorting();
     };
 
+    const handleOnSearchInput = (search: SearchTerm) => {
+      searchTerm.value = search;
+      applyFiltersAndSorting();
+    };
+
     watch(showButton, (newValue) => {
       if (!newValue) {
         isSortResetting.value = true;
@@ -183,7 +202,7 @@ export default defineComponent({
     });
 
     watch(
-      [sortOptions, filterOptions],
+      [sortOptions, filterOptions, searchTerm, isSortResetting],
       () => {
         applyFiltersAndSorting();
       },
@@ -195,7 +214,8 @@ export default defineComponent({
       showButton,
       handleOnShowMoreClick,
       handleOnSortChange,
-      handleOnFilterCheck
+      handleOnFilterCheck,
+      handleOnSearchInput
     };
   }
 });
