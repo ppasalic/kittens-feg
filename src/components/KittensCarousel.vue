@@ -14,14 +14,17 @@
       </div>
     </div>
     <div class="carousel-controls">
-      <button @click="prevSlide">Prev</button>
-      <button @click="nextSlide">Next</button>
+      <button @click="prevSlide"><ArrowLeftCircleIcon class="arrow-icon" /></button>
+      <button @click="nextSlide"><ArrowRightCircleIcon class="arrow-icon" /></button>
     </div>
 
     <div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
       <div class="modal-content" @click.stop>
-        <button class="modal-close" @click="closeModal">&times;</button>
-        <h2>{{ selectedKitten?.name }}</h2>
+        <div class="modal-header">
+          <h2>Kitten info</h2>
+          <button class="modal-close" @click="closeModal">&times;</button>
+        </div>
+        <h3>Name: {{ selectedKitten?.name }}</h3>
         <p>Color: {{ selectedKitten?.color }}</p>
         <p>Age: {{ selectedKitten?.age }}</p>
       </div>
@@ -32,9 +35,14 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted, computed } from 'vue';
 import { Kitten } from '../views/HomeView.vue';
+import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from '@heroicons/vue/24/solid';
 
 export default defineComponent({
   name: 'KittensCarousel',
+  components: {
+    ArrowLeftCircleIcon,
+    ArrowRightCircleIcon
+  },
   props: {
     carouselKittens: {
       type: Array as () => Kitten[],
