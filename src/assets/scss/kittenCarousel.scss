@@ -13,57 +13,71 @@
 
   .carousel-track {
     display: flex;
-    width: 300%;
     transition: transform 1s ease-in-out;
+    width: 100%;
 
     .carousel-slide {
       flex: 0 0 33.333%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       position: relative;
       transition:
-        opacity 1s ease-in-out,
-        transform 1s ease-in-out;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+        opacity 0.5s ease-in-out,
+        transform 1.2s ease-in-out;
       cursor: pointer;
       overflow: hidden;
       opacity: 0.5;
-    }
 
-    .carousel-slide img {
-      width: 100%;
-      height: 280px;
-      object-fit: cover;
-      transition: transform 1s ease-in-out;
-    }
+      img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        transition: transform 1s ease-in-out;
+      }
 
-    .kitten-name {
-      position: absolute;
-      font-size: 72px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(68, 61, 57, 0.5);
-      height: fit-content;
-      width: fit-content;
-      color: #fff;
-      padding: 5px 10px;
-      border-radius: 5px;
-      bottom: 30px;
-    }
+      .kitten-name {
+        position: absolute;
+        font-size: 68px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(68, 61, 57, 0.5);
+        color: #fff;
+        padding: 5px 10px;
+        border-radius: 5px;
+        bottom: 30px;
 
-    .active-slide {
-      opacity: 1;
-      z-index: 2;
-    }
+        @media (max-width: 1200px) {
+          font-size: 64px;
+        }
 
-    .active-slide:hover {
-      transform: scale(1.2);
-    }
+        @media (max-width: 992px) {
+          font-size: 48px;
+        }
 
-    .prev-slide,
-    .next-slide {
-      opacity: 0.5;
-      transform: scale(0.9);
+        @media (max-width: 768px) {
+          font-size: 32px;
+        }
+
+        @media (max-width: 768px) {
+          font-size: 18px;
+        }
+      }
+
+      &.active-slide {
+        opacity: 1;
+        z-index: 2;
+      }
+
+      &.active-slide:hover {
+        transform: scale(1.2);
+      }
+
+      &.prev-slide,
+      &.next-slide {
+        opacity: 0.5;
+        transform: scale(0.9);
+      }
     }
   }
 
@@ -88,10 +102,18 @@
       background-color: $primary-400;
     }
 
+    button:hover {
+      background-color: $primary-200;
+    }
+
     .arrow-icon {
       width: 32px;
       height: 32px;
       color: $primary-500;
+    }
+
+    .arrow-icon:hover {
+      color: $primary-600;
     }
   }
 }
@@ -119,15 +141,15 @@
 
   .modal-header {
     display: flex;
-    align-items: center; /* Align items vertically centered */
+    align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid $primary-600;
     padding-bottom: 10px;
 
     h2 {
-      margin: 0; /* Remove default margin from h2 */
-      font-size: 1.5em; /* Adjust font size as needed */
-      color: #333; /* Set text color */
+      margin: 0;
+      font-size: 1.5em;
+      color: #333;
     }
   }
 
@@ -141,6 +163,10 @@
     cursor: pointer;
     color: #333;
     font-weight: bold;
+  }
+
+  .modal-close:hover {
+    background-color: $primary-300;
   }
 
   .modal-image {

@@ -75,11 +75,8 @@ export default defineComponent({
       ];
     });
 
-    const slideWidth = computed(() => 100 / 33);
-
     const trackStyle = computed(() => ({
-      transform: `translateX(-${currentIndex.value * slideWidth.value}%)`,
-      transition: 'transform 1s ease-in-out'
+      transition: 'transform 0.5s ease-in-out'
     }));
 
     const getSlideClass = (index: number) => {
