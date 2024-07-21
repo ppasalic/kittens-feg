@@ -1,13 +1,13 @@
 <template>
   <div class="search-by-container">
+    <span class="search-icon"><MagnifyingGlassIcon class="icon" /></span>
     <input
       type="text"
       id="search"
       v-model="searchTerm"
       @input="handleOnSearchInput"
-      placeholder="Search..."
+      placeholder="Search by name"
     />
-    <span class="search-icon"><MagnifyingGlassIcon class="icon" /></span>
   </div>
 </template>
 
