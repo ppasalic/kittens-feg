@@ -12,6 +12,7 @@
           @mouseleave="resetAutoSlide"
         >
           <img :src="kitten.image" :alt="'Image ' + (currentIndex + index)" />
+          <div class="kitten-name">{{ kitten.name }}</div>
         </div>
       </div>
     </div>
