@@ -8,6 +8,8 @@
           class="carousel-slide"
           :class="getSlideClass(index)"
           @click="openModal(kitten)"
+          @mouseover="stopAutoSlide"
+          @mouseleave="resetAutoSlide"
         >
           <img :src="kitten.image" :alt="'Image ' + (currentIndex + index)" />
         </div>
@@ -19,7 +21,7 @@
     </div>
 
     <div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
-      <div class="modal-content" @click.stop>
+      <div class="modal-content">
         <div class="modal-header">
           <h2>Kitten info</h2>
           <button class="modal-close" @click="closeModal">&times;</button>
@@ -114,7 +116,7 @@ export default defineComponent({
       if (!autoSlideInterval) {
         autoSlideInterval = setInterval(() => {
           moveCarousel(autoSlideDirection.value);
-        }, 6000);
+        }, 3000);
       }
     };
 
@@ -141,13 +143,11 @@ export default defineComponent({
     const openModal = (kitten: Kitten) => {
       selectedKitten.value = kitten;
       isModalOpen.value = true;
-      stopAutoSlide();
     };
 
     const closeModal = () => {
       isModalOpen.value = false;
       selectedKitten.value = null;
-      resetAutoSlide();
     };
 
     return {
@@ -160,7 +160,9 @@ export default defineComponent({
       nextSlide,
       getSlideClass,
       openModal,
-      closeModal
+      closeModal,
+      stopAutoSlide,
+      resetAutoSlide
     };
   }
 });
