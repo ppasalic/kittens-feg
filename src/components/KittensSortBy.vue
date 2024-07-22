@@ -74,5 +74,5 @@ export default defineComponent({
 
 <style lang="scss">
 // the main file that imports everything related with styles
-@import '@/assets/scss/kittenSortBy.scss';
+@import '@assets/scss/kittenSortBy.scss';
 </style>

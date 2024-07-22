@@ -79,7 +79,7 @@ export default defineComponent({
         kittens.value = await Promise.all(
           data.kittens.map(async (kitten: Kitten) => {
             try {
-              const imagePath = await import(`@/assets/images/${kitten.name}.jpg`);
+              const imagePath = await import(`@assets/images/${kitten.name}.jpg`);
               return {
                 ...kitten,
                 image: imagePath.default || ''
@@ -242,5 +242,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/homeView.scss';
+@import '@assets/scss/homeView.scss';
 </style>

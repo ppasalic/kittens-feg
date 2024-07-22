@@ -35,5 +35,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/kittenSearchBy.scss';
+@import '@assets/scss/kittenSearchBy.scss';
 </style>

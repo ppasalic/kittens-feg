@@ -33,5 +33,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/kittenCard.scss';
+@import '@assets/scss/kittenCard.scss';
 </style>

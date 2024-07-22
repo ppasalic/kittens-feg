@@ -166,5 +166,5 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
-@import '@/assets/scss/kittenCarousel.scss';
+@import '@assets/scss/kittenCarousel.scss';
 </style>
