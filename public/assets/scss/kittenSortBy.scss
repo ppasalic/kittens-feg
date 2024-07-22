@@ -13,9 +13,9 @@ $radio-background: #fff;
 .sort-by-container {
   display: flex;
   flex-direction: row;
-  align-items: center;
   gap: 2em;
-  margin-bottom: 16px;
+  margin: 16px auto;
+  width: 80%;
 
   .sort-by-radio {
     display: flex;
