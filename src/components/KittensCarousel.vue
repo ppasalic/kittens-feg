@@ -21,30 +21,26 @@
       <button @click="nextSlide"><ArrowRightCircleIcon class="arrow-icon" /></button>
     </div>
 
-    <div v-if="isModalOpen" class="modal-overlay" @click="closeModal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h2>Kitten info</h2>
-          <button class="modal-close" @click="closeModal">&times;</button>
-        </div>
-        <h3>Name: {{ selectedKitten?.name }}</h3>
-        <p>Color: {{ selectedKitten?.color }}</p>
-        <p>Age: {{ selectedKitten?.age }}</p>
-      </div>
-    </div>
+    <KittenCarouselModal
+      :isOpen="isModalOpen"
+      :selectedKitten="selectedKitten"
+      @click="closeModal"
+    />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted, computed } from 'vue';
-import { Kitten } from '../views/HomeView.vue';
+import type { Kitten } from '../views/HomeView.vue';
 import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from '@heroicons/vue/24/solid';
+import KittenCarouselModal from '../components/KittenCarouselModal.vue';
 
 export default defineComponent({
   name: 'KittensCarousel',
   components: {
     ArrowLeftCircleIcon,
-    ArrowRightCircleIcon
+    ArrowRightCircleIcon,
+    KittenCarouselModal
   },
   props: {
     carouselKittens: {
