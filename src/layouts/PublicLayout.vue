@@ -5,9 +5,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
-export default defineComponent({});
+export default defineComponent({
+  name: 'PublicLayout'
+});
 </script>
-
-<style>
-/* Add global styles here if needed */
-</style>
