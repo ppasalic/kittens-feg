@@ -1,5 +1,5 @@
 .card {
-  width: 20em;
+  width: calc(80% / 5);
   height: auto;
   padding: 0.5em;
   border-radius: 5%;
@@ -40,5 +40,35 @@
       font-size: 1em;
       padding: 0;
     }
+  }
+}
+
+@media (max-width: 1200px) {
+  .card {
+    width: calc(80% / 4);
+  }
+}
+
+@media (max-width: 992px) {
+  .card {
+    width: calc(80% / 3);
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: calc(80% / 3);
+  }
+}
+
+@media (max-width: 576px) {
+  .card {
+    width: calc(80% / 2);
+  }
+}
+
+@media (max-width: 576px) {
+  .card {
+    width: calc(80% / 2);
   }
 }
