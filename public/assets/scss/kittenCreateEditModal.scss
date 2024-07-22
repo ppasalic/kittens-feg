@@ -62,12 +62,25 @@
     border-radius: 4px;
   }
 
-  .delete-btn {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 4px;
+  .reject-confirm-controls {
+    display: flex;
+    gap: 2em;
+    margin-top: 20px;
+
+    button {
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      width: 50%;
+    }
+
+    .reject-btn {
+      background-color: $primary-200;
+    }
+
+    .reject-btn:hover {
+      background-color: $primary-100;
+    }
   }
 }
