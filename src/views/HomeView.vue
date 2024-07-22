@@ -5,6 +5,7 @@
     <KittensSortBy @sort-by="handleOnSortChange" />
     <KittensFilterBy @filter-by="handleOnFilterCheck" />
     <KittensSearchBy @search-by="handleOnSearchInput" />
+
     <div class="kitten-list">
       <KittenCard v-for="kitten in visibleKittens" :key="kitten.id" :kitten="kitten" />
     </div>
