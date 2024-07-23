@@ -20,8 +20,8 @@
       <KittensSearchBy @search-by="handleOnSearchInput" />
       <div class="add-new-wrapper">
         <button v-if="showButton" class="add-new-btn" @click="openCreateModal">
-          <span>Add new</span>
-          <PlusIcon class="plus-icon" />
+          <span>Add new </span>
+          <span class="icon"><PlusIcon class="plus-icon" /></span>
         </button>
       </div>
     </div>
@@ -32,6 +32,7 @@
         :kitten="kitten"
         @edit="openEditModal"
         @delete="openDeleteModal"
+        @adopt="handleAdoptKitten"
       />
     </div>
     <div class="button-container">
@@ -152,6 +153,10 @@ export default defineComponent({
       closeDeleteModal();
     };
 
+    const handleAdoptKitten = (id: number) => {
+      kittensStore.removeKitten(id);
+    };
+
     const resetKittens = () => {
       kittensStore.resetKittens();
     };
@@ -231,7 +236,6 @@ export default defineComponent({
           return meetsAgeCriteria || meetsColorCriteria || matchesSearchTerm;
         });
       } else if (filterOptions.value.filters.length < 0) {
-        
         filteredKittens.value = [...kittens.value];
       } else {
         filteredKittens.value = [...visibleKittens.value];
@@ -297,6 +301,7 @@ export default defineComponent({
       closeDeleteModal,
       handleModalSubmit,
       handleDeleteKitten,
+      handleAdoptKitten,
       resetKittens
     };
   }

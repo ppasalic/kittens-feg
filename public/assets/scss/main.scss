@@ -70,9 +70,21 @@ button {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
+
+  span,
+  svg {
+    color: $primary-100;
+  }
 }
 
 button:hover,
 button:focus {
-  background-color: $primary-200;
+  background-color: $primary-400;
+  color: $primary-500;
+  font-weight: 600;
+
+  span,
+  svg {
+    color: $primary-500;
+  }
 }
