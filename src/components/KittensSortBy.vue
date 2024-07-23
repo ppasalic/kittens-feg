@@ -7,7 +7,7 @@
           id="name"
           value="name"
           name="name-age-sort"
-          v-model="sortCriteria"
+          v-model="sortByRadioButtonsValues.sortCriteria"
           @change="handleOnSortChange"
         />
         <label for="name">Name</label>
@@ -18,7 +18,7 @@
           id="age"
           value="age"
           name="name-age-sort"
-          v-model="sortCriteria"
+          v-model="sortByRadioButtonsValues.sortCriteria"
           @change="handleOnSortChange"
         />
         <label for="age">Age</label>
@@ -31,7 +31,7 @@
           id="asc"
           value="asc"
           name="asc-desc-sort"
-          v-model="sortOrder"
+          v-model="sortByRadioButtonsValues.sortOrder"
           @change="handleOnSortChange"
         />
         <label for="asc">Ascending</label>
@@ -42,7 +42,7 @@
           id="desc"
           value="desc"
           name="asc-desc-sort"
-          v-model="sortOrder"
+          v-model="sortByRadioButtonsValues.sortOrder"
           @change="handleOnSortChange"
         />
         <label for="desc">Descending</label>
@@ -52,22 +52,38 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watch } from 'vue';
+import type { SortOptions } from '../views/HomeView.vue';
+import { defineComponent, ref, watch, type PropType } from 'vue';
 
 export default defineComponent({
   name: 'KittensSortBy',
+  props: {
+    sortOptions: {
+      type: Object as PropType<SortOptions>,
+      required: true,
+      default: () => ({
+        sortCriteria: 'age',
+        sortOrder: 'asc'
+      })
+    }
+  },
   emits: ['sort-by'],
-  setup(_, { emit }) {
-    const sortCriteria = ref<string>('age');
-    const sortOrder = ref<string>('asc');
+  setup(props, { emit }) {
+    const sortByRadioButtonsValues = ref<SortOptions>({ ...props.sortOptions });
 
     const handleOnSortChange = () => {
-      emit('sort-by', { sortCriteria: sortCriteria, sortOrder: sortOrder });
+      emit('sort-by', sortByRadioButtonsValues.value);
     };
 
-    watch([sortCriteria, sortOrder], handleOnSortChange, { immediate: true });
+    watch(
+      () => props.sortOptions,
+      (newSortOptions) => {
+        sortByRadioButtonsValues.value = { ...newSortOptions };
+      },
+      { immediate: true }
+    );
 
-    return { sortCriteria, sortOrder, handleOnSortChange };
+    return { sortByRadioButtonsValues, handleOnSortChange };
   }
 });
 </script>

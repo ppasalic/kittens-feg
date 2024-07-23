@@ -63,7 +63,7 @@ export interface Kitten {
   image?: string;
 }
 
-interface SortOptions {
+export interface SortOptions {
   sortCriteria: 'name' | 'age';
   sortOrder: 'asc' | 'desc';
 }
@@ -156,9 +156,15 @@ export default defineComponent({
       kittensStore.resetKittens();
     };
 
-    const updateVisibleKittens = (reset: boolean = false) => {
-      const currentLength = reset ? 0 : visibleKittens.value.length;
+    const updateVisibleKittens = (isSortByOrFilterbyClicked: boolean = false) => {
+      const currentLength = isSortByOrFilterbyClicked ? 0 : visibleKittens.value.length;
       visibleKittens.value = filteredKittens.value.slice(0, currentLength + showMoreCards.value);
+
+      if (!isSortByOrFilterbyClicked) {
+        sortOptions.value.sortOrder = 'asc';
+        sortOptions.value.sortCriteria = 'age';
+      }
+
       showButton.value = visibleKittens.value.length < filteredKittens.value.length;
     };
 
@@ -224,8 +230,11 @@ export default defineComponent({
 
           return meetsAgeCriteria || meetsColorCriteria || matchesSearchTerm;
         });
-      } else {
+      } else if (filterOptions.value.filters.length < 0) {
+        
         filteredKittens.value = [...kittens.value];
+      } else {
+        filteredKittens.value = [...visibleKittens.value];
       }
     };
 
@@ -240,22 +249,15 @@ export default defineComponent({
     };
 
     const handleOnSortChange = (filters: SortOptions) => {
-      if (isSortResetting.value) {
-        isSortResetting.value = false;
-        return;
-      }
       sortOptions.value = filters;
-      applyFiltersAndSorting();
     };
 
     const handleOnFilterCheck = (filters: FilterOptions) => {
       filterOptions.value = filters;
-      applyFiltersAndSorting();
     };
 
     const handleOnSearchInput = (search: SearchTerm) => {
       searchTerm.value = search;
-      applyFiltersAndSorting();
     };
 
     const getCarouselKittens = () => {
@@ -266,15 +268,6 @@ export default defineComponent({
         .slice(0, 4)
         .map((kitten: Kitten) => ({ ...kitten }));
     };
-
-    watch(showButton, (newValue) => {
-      if (!newValue) {
-        isSortResetting.value = true;
-        sortOptions.value.sortCriteria = 'age';
-        sortOptions.value.sortOrder = 'asc';
-        applyFiltersAndSorting();
-      }
-    });
 
     watch(
       [sortOptions, filterOptions, searchTerm, isSortResetting, kittens],
@@ -291,6 +284,7 @@ export default defineComponent({
       isModalOpen,
       isDeleteModalOpen,
       selectedKitten,
+      filteredKittens,
       handleOnShowMoreClick,
       handleOnSortChange,
       handleOnFilterCheck,
