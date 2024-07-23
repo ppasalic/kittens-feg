@@ -10,7 +10,10 @@
       <KittenCard v-for="kitten in visibleKittens" :key="kitten.id" :kitten="kitten" />
     </div>
     <div class="button-container">
-      <button v-if="showButton" @click.prevent="handleOnShowMoreClick">Show More</button>
+      <button v-if="showButton" @click.prevent="handleOnShowMoreClick" class="show-more-button">
+        <span>Show More</span>
+        <ArrowDownIcon class="arrow-down-icon" />
+      </button>
     </div>
   </div>
 </template>
@@ -22,6 +25,7 @@ import KittensSortBy from '../components/KittensSortBy.vue';
 import KittensFilterBy from '../components/KittensFilterBy.vue';
 import KittensSearchBy from '../components/KittensSearchBy.vue';
 import KittensCarousel from '../components/KittensCarousel.vue';
+import { ArrowDownIcon } from '@heroicons/vue/24/solid';
 
 export interface Kitten {
   id: number;
@@ -54,7 +58,8 @@ export default defineComponent({
     KittenCard,
     KittensSortBy,
     KittensFilterBy,
-    KittensSearchBy
+    KittensSearchBy,
+    ArrowDownIcon
   },
   setup() {
     const kittens = ref<Kitten[]>([]);

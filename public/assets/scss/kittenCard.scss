@@ -82,18 +82,12 @@
 
 @media (max-width: 768px) {
   .card {
-    width: calc(80% / 3);
-  }
-}
-
-@media (max-width: 576px) {
-  .card {
     width: calc(80% / 2);
   }
 }
 
 @media (max-width: 576px) {
   .card {
-    width: calc(80% / 2);
+    width: 100%;
   }
 }

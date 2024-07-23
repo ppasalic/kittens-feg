@@ -32,12 +32,31 @@
   margin-top: 16px;
   width: 80%;
   margin: 0 auto;
+}
 
-  .button-container {
+.button-container {
+  display: flex;
+  width: 80%;
+  margin: 0 auto;
+  justify-content: center;
+  padding: 1em;
+
+  .show-more-button {
     display: flex;
-    width: 80%;
-    margin: 0 auto;
+    align-items: center;
     justify-content: center;
-    padding: 1em;
+    gap: 8px;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+
+  .arrow-down-icon {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    box-sizing: border-box;
+    align-items: center;
+    color: $primary-400;
   }
 }
