@@ -47,7 +47,6 @@
     justify-content: center;
     gap: 8px;
     width: 130px;
-    height: 40px;
     border: none;
     padding: 10px 15px;
     cursor: pointer;
@@ -55,8 +54,8 @@
 
   .arrow-down-icon,
   .plus-icon {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     position: relative;
     box-sizing: border-box;
     align-items: center;
@@ -80,9 +79,6 @@
         justify-content: center;
         gap: 8px;
         width: 120px;
-        height: 40px;
-        border: none;
-        padding: 10px 15px;
         cursor: pointer;
       }
     }
