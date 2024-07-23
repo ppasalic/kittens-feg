@@ -4,13 +4,20 @@
     <KittensCarousel :carouselKittens="carouselKittens.kittens" />
     <KittensSortBy @sort-by="handleOnSortChange" />
     <KittensFilterBy @filter-by="handleOnFilterCheck" />
-    <KittensSearchBy @search-by="handleOnSearchInput" />
-
+    <div class="search-add-new-wrapper">
+      <KittensSearchBy @search-by="handleOnSearchInput" />
+      <div class="add-new-wrapper">
+        <button v-if="showButton" class="add-new-btn" @click="">
+          <span>Add new</span>
+          <PlusIcon class="plus-icon" />
+        </button>
+      </div>
+    </div>
     <div class="kitten-list">
       <KittenCard v-for="kitten in visibleKittens" :key="kitten.id" :kitten="kitten" />
     </div>
     <div class="button-container">
-      <button v-if="showButton" @click.prevent="handleOnShowMoreClick" class="show-more-button">
+      <button v-if="showButton" @click.prevent="handleOnShowMoreClick" class="show-more-btn">
         <span>Show More</span>
         <ArrowDownIcon class="arrow-down-icon" />
       </button>
@@ -25,7 +32,7 @@ import KittensSortBy from '../components/KittensSortBy.vue';
 import KittensFilterBy from '../components/KittensFilterBy.vue';
 import KittensSearchBy from '../components/KittensSearchBy.vue';
 import KittensCarousel from '../components/KittensCarousel.vue';
-import { ArrowDownIcon } from '@heroicons/vue/24/solid';
+import { ArrowDownIcon, PlusIcon } from '@heroicons/vue/24/solid';
 
 export interface Kitten {
   id: number;
@@ -59,7 +66,8 @@ export default defineComponent({
     KittensSortBy,
     KittensFilterBy,
     KittensSearchBy,
-    ArrowDownIcon
+    ArrowDownIcon,
+    PlusIcon
   },
   setup() {
     const kittens = ref<Kitten[]>([]);

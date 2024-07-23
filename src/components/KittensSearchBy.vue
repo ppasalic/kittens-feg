@@ -1,5 +1,5 @@
 <template>
-  <div class="search-by-container">
+  <div class="search-by-wrapper">
     <span class="search-icon"><MagnifyingGlassIcon class="icon" /></span>
     <input
       type="text"
