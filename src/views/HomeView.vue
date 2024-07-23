@@ -5,21 +5,34 @@
     <KittensSortBy @sort-by="handleOnSortChange" />
     <KittensFilterBy @filter-by="handleOnFilterCheck" />
     <KittenCreateEditModal
-      :isOpen="isCreateModalOpen"
-      @close="closeCreateModal"
-      @submit="handleCreateModalSubmit"
+      :isOpen="isModalOpen"
+      :kitten="selectedKitten"
+      @close="closeModal"
+      @submit="handleModalSubmit"
+    />
+    <KittenDeleteModal
+      :isOpen="isDeleteModalOpen"
+      :kitten="selectedKitten"
+      @close="closeDeleteModal"
+      @submit="handleDeleteKitten"
     />
     <div class="search-add-new-wrapper">
       <KittensSearchBy @search-by="handleOnSearchInput" />
       <div class="add-new-wrapper">
-        <button v-if="showButton" class="add-new-btn" @click.prevent="openCreateModal">
+        <button v-if="showButton" class="add-new-btn" @click="openCreateModal">
           <span>Add new</span>
           <PlusIcon class="plus-icon" />
         </button>
       </div>
     </div>
     <div class="kitten-list">
-      <KittenCard v-for="kitten in visibleKittens" :key="kitten.id" :kitten="kitten" />
+      <KittenCard
+        v-for="kitten in visibleKittens"
+        :key="kitten.id"
+        :kitten="kitten"
+        @edit="openEditModal"
+        @delete="openDeleteModal"
+      />
     </div>
     <div class="button-container">
       <button v-if="showButton" @click.prevent="handleOnShowMoreClick" class="show-more-btn">
@@ -31,13 +44,15 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, defineComponent, watch } from 'vue';
+import { ref, onMounted, defineComponent, watch, computed } from 'vue';
 import KittenCard from '../components/KittenCard.vue';
 import KittensSortBy from '../components/KittensSortBy.vue';
 import KittensFilterBy from '../components/KittensFilterBy.vue';
 import KittensSearchBy from '../components/KittensSearchBy.vue';
 import KittensCarousel from '../components/KittensCarousel.vue';
 import KittenCreateEditModal from '../components/KittenCreateEditModal.vue';
+import KittenDeleteModal from '../components/KittenDeleteModal.vue';
+import { useKittensStore } from '../stores/kittensStore';
 import { ArrowDownIcon, PlusIcon } from '@heroicons/vue/24/solid';
 
 export interface Kitten {
@@ -73,11 +88,12 @@ export default defineComponent({
     KittensFilterBy,
     KittensSearchBy,
     KittenCreateEditModal,
+    KittenDeleteModal,
     ArrowDownIcon,
     PlusIcon
   },
   setup() {
-    const kittens = ref<Kitten[]>([]);
+    const kittensStore = useKittensStore();
     const filteredKittens = ref<Kitten[]>([]);
     const visibleKittens = ref<Kitten[]>([]);
     const showButton = ref<boolean>(false);
@@ -87,47 +103,57 @@ export default defineComponent({
     const filterOptions = ref<FilterOptions>({ filters: [] });
     const searchTerm = ref<SearchTerm>({ searchTerm: '' });
     const carouselKittens = ref<CarouselSlide>({ kittens: [] });
-    const isCreateModalOpen = ref(false);
+    const isModalOpen = ref<boolean>(false);
+    const isDeleteModalOpen = ref<boolean>(false);
+    const selectedKitten = ref<Kitten>({ id: 0, name: '', color: '', age: '', image: '' });
+    const kittens = computed(() => kittensStore.kittens);
 
-    onMounted(async () => {
-      try {
-        const response = await fetch('/kittens.json');
-        const data = await response.json();
-        kittens.value = await Promise.all(
-          data.kittens.map(async (kitten: Kitten) => {
-            try {
-              const imagePath = await import(`@assets/images/${kitten.name}.jpg`);
-              return {
-                ...kitten,
-                image: imagePath.default || ''
-              };
-            } catch (e) {
-              return {
-                ...kitten,
-                image: ''
-              };
-            }
-          })
-        );
+    onMounted(() => {
+      kittensStore.fetchInitialKittens().then(() => {
         applyFiltersAndSorting();
         getCarouselKittens();
-      } catch (e) {
-        console.error('Failed to fetch kittens data:', e);
-      }
+      });
     });
 
     const openCreateModal = () => {
-      isCreateModalOpen.value = true;
+      selectedKitten.value = { id: 0, name: '', color: '', age: '', image: '' };
+      isModalOpen.value = true;
     };
 
-    const closeCreateModal = () => {
-      isCreateModalOpen.value = false;
+    const openEditModal = (kitten: Kitten) => {
+      selectedKitten.value = { ...kitten };
+      isModalOpen.value = true;
     };
 
-    const handleCreateModalSubmit = (createdKitten: Kitten) => {
-      console.log('Created Kitten:', createdKitten);
+    const openDeleteModal = (kitten: Kitten) => {
+      selectedKitten.value = { ...kitten };
+      isDeleteModalOpen.value = true;
+    };
 
-      closeCreateModal();
+    const closeModal = () => {
+      isModalOpen.value = false;
+    };
+
+    const closeDeleteModal = () => {
+      isDeleteModalOpen.value = false;
+    };
+
+    const handleModalSubmit = (kitten: Kitten) => {
+      if (kitten.id === 0) {
+        kittensStore.addKitten(kitten);
+      } else {
+        kittensStore.updateKitten(kitten);
+      }
+      closeModal();
+    };
+
+    const handleDeleteKitten = (id: number) => {
+      kittensStore.removeKitten(id);
+      closeDeleteModal();
+    };
+
+    const resetKittens = () => {
+      kittensStore.resetKittens();
     };
 
     const updateVisibleKittens = (reset: boolean = false) => {
@@ -251,7 +277,7 @@ export default defineComponent({
     });
 
     watch(
-      [sortOptions, filterOptions, searchTerm, isSortResetting],
+      [sortOptions, filterOptions, searchTerm, isSortResetting, kittens],
       () => {
         applyFiltersAndSorting();
       },
@@ -262,15 +288,22 @@ export default defineComponent({
       visibleKittens,
       showButton,
       carouselKittens,
-      isCreateModalOpen,
+      isModalOpen,
+      isDeleteModalOpen,
+      selectedKitten,
       handleOnShowMoreClick,
       handleOnSortChange,
       handleOnFilterCheck,
       handleOnSearchInput,
       getCarouselKittens,
       openCreateModal,
-      closeCreateModal,
-      handleCreateModalSubmit
+      openEditModal,
+      openDeleteModal,
+      closeModal,
+      closeDeleteModal,
+      handleModalSubmit,
+      handleDeleteKitten,
+      resetKittens
     };
   }
 });

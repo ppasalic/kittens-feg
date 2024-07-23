@@ -9,11 +9,9 @@
         <p>
           Are you sure you want to delete <strong>{{ kitten.name }}</strong> kitten?
         </p>
-        <div class="form-group">
-          <div class="reject-confirm-controls">
-            <button type="submit" class="reject-btn" @click="closeModal">Reject</button>
-            <button type="submit" class="accept-btn" @click="onSubmit">Confirm</button>
-          </div>
+        <div class="form-group reject-confirm-controls">
+          <button type="submit" class="reject-btn" @click="closeModal">Reject</button>
+          <button type="submit" class="accept-btn" @click="onSubmit">Confirm</button>
         </div>
       </form>
     </div>
@@ -62,7 +60,7 @@ export default defineComponent({
     );
 
     const handleSubmit = () => {
-      emit('submit', formData.value);
+      emit('submit', formData.value.id);
       closeModal();
     };
 

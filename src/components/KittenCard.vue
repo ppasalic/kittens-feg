@@ -8,47 +8,24 @@
       <p>Age: {{ kitten.age }}</p>
       <p>Color: {{ kitten.color }}</p>
       <div class="edit-delete-controls">
-        <button @click="openEditModal(kitten)">
-          <PencilSquareIcon class="pencil-icon" />
+        <button @click="$emit('edit', kitten)">
+          <span class="edit-icon"><PencilSquareIcon class="icon" /></span>
         </button>
-        <button @click="openDeleteModal(kitten)">
-          <TrashIcon class="pencil-icon" />
+        <button @click="$emit('delete', kitten)">
+          <span class="delete-icon"><TrashIcon class="icon" /></span>
         </button>
       </div>
     </div>
   </div>
-  <KittenCreateEditModal
-    :isOpen="isEditModalOpen"
-    :kitten="selectedKitten"
-    @close="closeEditModal"
-    @submit="handleSubmit"
-  />
-  <KittenDeleteModal
-    :isOpen="isDeleteModalOpen"
-    :kitten="selectedKitten"
-    @close="closeDeleteModal"
-    @submit="handleSubmit"
-  />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, type PropType } from 'vue';
+import { defineComponent, type PropType } from 'vue';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/solid';
-import KittenCreateEditModal from './KittenCreateEditModal.vue';
-import KittenDeleteModal from './KittenDeleteModal.vue';
-
-interface Kitten {
-  id: number;
-  name: string;
-  color: string;
-  age: string;
-  image?: string;
-}
+import type { Kitten } from '../views/HomeView.vue';
 
 export default defineComponent({
   components: {
-    KittenCreateEditModal,
-    KittenDeleteModal,
     PencilSquareIcon,
     TrashIcon
   },
@@ -57,46 +34,6 @@ export default defineComponent({
       type: Object as PropType<Kitten>,
       required: true
     }
-  },
-  setup() {
-    const isEditModalOpen = ref(false);
-    const isDeleteModalOpen = ref(false);
-    const selectedKitten = ref<Kitten>();
-
-    const openEditModal = (kitten: Kitten) => {
-      selectedKitten.value = kitten;
-      isEditModalOpen.value = true;
-    };
-
-    const openDeleteModal = (kitten: Kitten) => {
-      selectedKitten.value = kitten;
-      isDeleteModalOpen.value = true;
-    };
-
-    const closeEditModal = () => {
-      isEditModalOpen.value = false;
-    };
-
-    const closeDeleteModal = () => {
-      isDeleteModalOpen.value = false;
-    };
-
-    const handleSubmit = (updatedKitten: Kitten) => {
-      console.log('Updated Kitten:', updatedKitten);
-
-      closeEditModal();
-    };
-
-    return {
-      isEditModalOpen,
-      isDeleteModalOpen,
-      selectedKitten,
-      openEditModal,
-      closeEditModal,
-      openDeleteModal,
-      closeDeleteModal,
-      handleSubmit
-    };
   }
 });
 </script>
