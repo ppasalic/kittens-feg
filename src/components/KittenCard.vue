@@ -17,7 +17,7 @@
       </div>
     </div>
   </div>
-  <KittenEditModal
+  <KittenCreateEditModal
     :isOpen="isEditModalOpen"
     :kitten="selectedKitten"
     @close="closeEditModal"
@@ -34,7 +34,7 @@
 <script lang="ts">
 import { defineComponent, ref, type PropType } from 'vue';
 import { PencilSquareIcon, TrashIcon } from '@heroicons/vue/24/solid';
-import KittenEditModal from './KittenEditModal.vue';
+import KittenCreateEditModal from './KittenCreateEditModal.vue';
 import KittenDeleteModal from './KittenDeleteModal.vue';
 
 interface Kitten {
@@ -47,7 +47,7 @@ interface Kitten {
 
 export default defineComponent({
   components: {
-    KittenEditModal,
+    KittenCreateEditModal,
     KittenDeleteModal,
     PencilSquareIcon,
     TrashIcon

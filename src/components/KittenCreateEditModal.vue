@@ -2,7 +2,7 @@
   <div v-if="isOpen" class="modal-overlay" @click.self="closeModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Edit Kitten</h2>
+        <h2>{{ isEditMode ? 'Edit Kitten' : 'Create Kitten' }}</h2>
         <button class="modal-close" @click="closeModal">&times;</button>
       </div>
       <form @submit.prevent="handleSubmit">
@@ -45,24 +45,16 @@
           />
         </div>
         <div class="form-group">
-          <button type="submit">Save Changes</button>
+          <button type="submit">{{ isEditMode ? 'Save Changes' : 'Add Kitten' }}</button>
         </div>
       </form>
     </div>
   </div>
 </template>
-
 <script lang="ts">
-import { defineComponent, ref, type PropType, watch } from 'vue';
+import { defineComponent, ref, type PropType, watch, computed } from 'vue';
 import { uniqueKittenColors } from '../data/kittenColors';
-
-interface Kitten {
-  id: number;
-  name: string;
-  color: string;
-  age: string;
-  image?: string;
-}
+import type { Kitten } from '../views/HomeView.vue';
 
 export default defineComponent({
   props: {
@@ -72,7 +64,7 @@ export default defineComponent({
     },
     kitten: {
       type: Object as PropType<Kitten>,
-      required: true,
+      required: false,
       default: () => ({
         id: 0,
         name: '',
@@ -85,6 +77,8 @@ export default defineComponent({
   emits: ['close', 'submit'],
   setup(props, { emit }) {
     const formData = ref<Kitten>({ ...props.kitten });
+
+    const isEditMode = computed(() => !!props.kitten && props.kitten.id !== 0);
 
     watch(
       () => props.kitten,
@@ -107,11 +101,13 @@ export default defineComponent({
       formData,
       uniqueKittenColors,
       handleSubmit,
-      closeModal
+      closeModal,
+      isEditMode
     };
   }
 });
 </script>
+
 <style lang="scss">
 @import '@assets/scss/kittenCreateEditModal.scss';
 </style>

@@ -4,10 +4,15 @@
     <KittensCarousel :carouselKittens="carouselKittens.kittens" />
     <KittensSortBy @sort-by="handleOnSortChange" />
     <KittensFilterBy @filter-by="handleOnFilterCheck" />
+    <KittenCreateEditModal
+      :isOpen="isCreateModalOpen"
+      @close="closeCreateModal"
+      @submit="handleCreateModalSubmit"
+    />
     <div class="search-add-new-wrapper">
       <KittensSearchBy @search-by="handleOnSearchInput" />
       <div class="add-new-wrapper">
-        <button v-if="showButton" class="add-new-btn" @click="">
+        <button v-if="showButton" class="add-new-btn" @click.prevent="openCreateModal">
           <span>Add new</span>
           <PlusIcon class="plus-icon" />
         </button>
@@ -32,6 +37,7 @@ import KittensSortBy from '../components/KittensSortBy.vue';
 import KittensFilterBy from '../components/KittensFilterBy.vue';
 import KittensSearchBy from '../components/KittensSearchBy.vue';
 import KittensCarousel from '../components/KittensCarousel.vue';
+import KittenCreateEditModal from '../components/KittenCreateEditModal.vue';
 import { ArrowDownIcon, PlusIcon } from '@heroicons/vue/24/solid';
 
 export interface Kitten {
@@ -66,6 +72,7 @@ export default defineComponent({
     KittensSortBy,
     KittensFilterBy,
     KittensSearchBy,
+    KittenCreateEditModal,
     ArrowDownIcon,
     PlusIcon
   },
@@ -80,6 +87,7 @@ export default defineComponent({
     const filterOptions = ref<FilterOptions>({ filters: [] });
     const searchTerm = ref<SearchTerm>({ searchTerm: '' });
     const carouselKittens = ref<CarouselSlide>({ kittens: [] });
+    const isCreateModalOpen = ref(false);
 
     onMounted(async () => {
       try {
@@ -107,6 +115,20 @@ export default defineComponent({
         console.error('Failed to fetch kittens data:', e);
       }
     });
+
+    const openCreateModal = () => {
+      isCreateModalOpen.value = true;
+    };
+
+    const closeCreateModal = () => {
+      isCreateModalOpen.value = false;
+    };
+
+    const handleCreateModalSubmit = (createdKitten: Kitten) => {
+      console.log('Created Kitten:', createdKitten);
+
+      closeCreateModal();
+    };
 
     const updateVisibleKittens = (reset: boolean = false) => {
       const currentLength = reset ? 0 : visibleKittens.value.length;
@@ -240,11 +262,15 @@ export default defineComponent({
       visibleKittens,
       showButton,
       carouselKittens,
+      isCreateModalOpen,
       handleOnShowMoreClick,
       handleOnSortChange,
       handleOnFilterCheck,
       handleOnSearchInput,
-      getCarouselKittens
+      getCarouselKittens,
+      openCreateModal,
+      closeCreateModal,
+      handleCreateModalSubmit
     };
   }
 });
