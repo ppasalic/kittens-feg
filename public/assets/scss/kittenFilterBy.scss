@@ -26,12 +26,12 @@ $checkbox-background: #fff;
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 10px;
-      height: 10px;
+      width: 8px;
+      height: 8px;
       background: $checkbox-checked-color;
       border-radius: 2px;
       transform: translate(-50%, -50%) scale(0);
-      transition: transform 0.2s;
+      transition: transform 0.1s;
     }
 
     &:checked {
