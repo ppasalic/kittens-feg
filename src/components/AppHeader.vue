@@ -14,6 +14,7 @@
       </ul>
     </nav>
   </header>
+  <div class="page-header"><h1 class="page-title">Kitten adoption</h1></div>
 </template>
 
 <script lang="ts">

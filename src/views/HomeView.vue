@@ -1,6 +1,5 @@
 <template>
   <div class="home-page-container">
-    <h1>Kitten adoption</h1>
     <KittensCarousel :carouselKittens="carouselKittens.kittens" />
     <KittensSortBy @sort-by="handleOnSortChange" />
     <KittensFilterBy @filter-by="handleOnFilterCheck" />

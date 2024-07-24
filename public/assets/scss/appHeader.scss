@@ -7,6 +7,32 @@ header {
   align-items: center;
 }
 
+.page-header {
+  background-color: $primary-600;
+  backdrop-filter: blur(5px); // Blurring effect for depth
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+
+  .page-title {
+    width: 100%;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 2.5rem;
+    color: $primary-100;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: bold;
+
+    @media (max-width: 768px) {
+      font-size: 2rem;
+    }
+
+    @media (max-width: 480px) {
+      font-size: 1.5rem;
+    }
+  }
+}
+
 header a {
   text-decoration: none;
   color: $primary-200;
