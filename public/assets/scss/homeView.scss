@@ -79,3 +79,28 @@
     }
   }
 }
+
+.adopt-kitten-btn {
+  display: flex;
+  flex-direction: center;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+
+  span {
+    line-height: 12px;
+  }
+
+  .heart-icon svg {
+    width: 20px;
+    height: 20px;
+    position: relative;
+    box-sizing: border-box;
+    color: red;
+  }
+}

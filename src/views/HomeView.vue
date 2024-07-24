@@ -12,6 +12,7 @@
     <KittenDeleteModal
       :isOpen="isDeleteModalOpen"
       :kitten="selectedKitten"
+      :isDeleteMode="isDeleteMode"
       @close="closeDeleteModal"
       @submit="handleDeleteKitten"
     />
@@ -31,7 +32,7 @@
         :kitten="kitten"
         @edit="openEditModal"
         @delete="openDeleteModal"
-        @adopt="handleAdoptKitten"
+        @adopt="openAdoptModal"
       />
     </div>
     <div class="button-container">
@@ -107,6 +108,7 @@ export default defineComponent({
     const isDeleteModalOpen = ref<boolean>(false);
     const selectedKitten = ref<Kitten>({ id: 0, name: '', color: '', age: '', image: '' });
     const kittens = computed(() => kittensStore.kittens);
+    const isDeleteMode = ref<boolean>(false);
 
     onMounted(() => {
       kittensStore.fetchInitialKittens().then(() => {
@@ -126,7 +128,17 @@ export default defineComponent({
     };
 
     const openDeleteModal = (kitten: Kitten) => {
+      console.log('DELETE kitten', kitten);
+
       selectedKitten.value = { ...kitten };
+      isDeleteMode.value = true;
+      isDeleteModalOpen.value = true;
+    };
+
+    const openAdoptModal = (kitten: Kitten) => {
+      console.log('kitten', kitten);
+      selectedKitten.value = { ...kitten };
+      isDeleteMode.value = false;
       isDeleteModalOpen.value = true;
     };
 
@@ -150,10 +162,6 @@ export default defineComponent({
     const handleDeleteKitten = (id: number) => {
       kittensStore.removeKitten(id);
       closeDeleteModal();
-    };
-
-    const handleAdoptKitten = (id: number) => {
-      kittensStore.removeKitten(id);
     };
 
     const resetKittens = () => {
@@ -286,6 +294,7 @@ export default defineComponent({
       carouselKittens,
       isModalOpen,
       isDeleteModalOpen,
+      isDeleteMode,
       selectedKitten,
       filteredKittens,
       handleOnShowMoreClick,
@@ -296,11 +305,11 @@ export default defineComponent({
       openCreateModal,
       openEditModal,
       openDeleteModal,
+      openAdoptModal,
       closeModal,
       closeDeleteModal,
       handleModalSubmit,
       handleDeleteKitten,
-      handleAdoptKitten,
       resetKittens
     };
   }

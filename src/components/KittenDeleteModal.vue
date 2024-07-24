@@ -2,12 +2,13 @@
   <div v-if="isOpen" class="modal-overlay" @click.self="closeModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Delete Kitten</h2>
+        <h2>{{ isDeleteMode ? 'Delete Kitten' : 'Adopt Kitten' }}</h2>
         <button class="modal-close" @click="closeModal">&times;</button>
       </div>
       <form @submit.prevent="handleSubmit">
         <p>
-          Are you sure you want to delete <strong>{{ kitten.name }}</strong> kitten?
+          Are you sure you want to {{ isDeleteMode ? 'delete' : 'adopt' }}
+          <strong>{{ kitten.name }}</strong> kitten?
         </p>
         <div class="form-group reject-confirm-controls">
           <button type="submit" class="reject-btn" @click="closeModal">Reject</button>
@@ -45,12 +46,16 @@ export default defineComponent({
         age: '',
         image: ''
       })
+    },
+    isDeleteMode: {
+      type: Boolean
     }
   },
   emits: ['close', 'submit'],
   setup(props, { emit }) {
     const formData = ref<Kitten>({ ...props.kitten });
 
+    console.log('kitten ', { ...props.kitten });
     watch(
       () => props.kitten,
       (newKitten: Kitten) => {

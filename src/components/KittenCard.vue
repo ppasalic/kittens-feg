@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="card-footer">
-      <button button @click="$emit('adopt', kitten.id)" id="adopt-kitten-btn">
+      <button button @click="$emit('adopt', kitten)" class="adopt-kitten-btn">
         <span>Adopt</span>
         <span class="heart-icon"><HeartIcon /></span>
       </button>

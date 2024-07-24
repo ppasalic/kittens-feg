@@ -25,6 +25,14 @@
       :isOpen="isModalOpen"
       :selectedKitten="selectedKitten"
       @click="closeModal"
+      @adopt="openAdoptModal"
+    />
+    <KittenDeleteModal
+      :isOpen="isDeleteModalOpen"
+      :kitten="selectedKitten"
+      :isDeleteMode="isDeleteMode"
+      @close="closeDeleteModal"
+      @submit="handleDeleteKitten"
     />
   </div>
 </template>
@@ -34,13 +42,16 @@ import { defineComponent, ref, onMounted, onUnmounted, computed } from 'vue';
 import type { Kitten } from '../views/HomeView.vue';
 import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from '@heroicons/vue/24/solid';
 import KittenCarouselModal from '../components/KittenCarouselModal.vue';
+import KittenDeleteModal from '../components/KittenDeleteModal.vue';
+import { useKittensStore } from '../stores/kittensStore';
 
 export default defineComponent({
   name: 'KittensCarousel',
   components: {
     ArrowLeftCircleIcon,
     ArrowRightCircleIcon,
-    KittenCarouselModal
+    KittenCarouselModal,
+    KittenDeleteModal
   },
   props: {
     carouselKittens: {
@@ -52,9 +63,12 @@ export default defineComponent({
     const currentIndex = ref(0);
     let autoSlideInterval: NodeJS.Timeout | null = null;
     let autoSlideDirection = ref<'left' | 'right'>('right');
+    const isDeleteMode = ref<boolean>(false);
+    const isDeleteModalOpen = ref<boolean>(false);
+    const kittensStore = useKittensStore();
 
     const isModalOpen = ref(false);
-    const selectedKitten = ref<Kitten | null>(null);
+    const selectedKitten = ref<Kitten>();
 
     const totalKittens = computed(() => props.carouselKittens.length);
 
@@ -141,7 +155,22 @@ export default defineComponent({
 
     const closeModal = () => {
       isModalOpen.value = false;
-      selectedKitten.value = null;
+    };
+
+    const openAdoptModal = (kitten: Kitten) => {
+      console.log('kitten', kitten);
+      selectedKitten.value = { ...kitten };
+      isDeleteMode.value = false;
+      isDeleteModalOpen.value = true;
+    };
+
+    const closeDeleteModal = () => {
+      isDeleteModalOpen.value = false;
+    };
+
+    const handleDeleteKitten = (id: number) => {
+      kittensStore.removeKitten(id);
+      closeDeleteModal();
     };
 
     return {
@@ -150,13 +179,18 @@ export default defineComponent({
       trackStyle,
       isModalOpen,
       selectedKitten,
+      isDeleteModalOpen,
+      isDeleteMode,
       prevSlide,
       nextSlide,
       getSlideClass,
       openModal,
       closeModal,
       stopAutoSlide,
-      resetAutoSlide
+      resetAutoSlide,
+      openAdoptModal,
+      closeDeleteModal,
+      handleDeleteKitten
     };
   }
 });
