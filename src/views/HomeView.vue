@@ -1,6 +1,6 @@
 <template>
   <div class="home-page-container">
-    <KittensCarousel :carouselKittens="carouselKittens.kittens" />
+    <KittensCarousel @on-adopt="openAdoptModal" @close-delete-modal="closeDeleteModal" />
     <KittensSortBy @sort-by="handleOnSortChange" />
     <KittensFilterBy @filter-by="handleOnFilterCheck" />
     <KittenCreateEditModal
@@ -77,10 +77,6 @@ interface SearchTerm {
   searchTerm: string;
 }
 
-interface CarouselSlide {
-  kittens: Kitten[];
-}
-
 export default defineComponent({
   components: {
     KittensCarousel,
@@ -103,7 +99,6 @@ export default defineComponent({
     const isSortResetting = ref<boolean>(false);
     const filterOptions = ref<FilterOptions>({ filters: [] });
     const searchTerm = ref<SearchTerm>({ searchTerm: '' });
-    const carouselKittens = ref<CarouselSlide>({ kittens: [] });
     const isModalOpen = ref<boolean>(false);
     const isDeleteModalOpen = ref<boolean>(false);
     const selectedKitten = ref<Kitten>({ id: 0, name: '', color: '', age: '', image: '' });
@@ -113,7 +108,6 @@ export default defineComponent({
     onMounted(() => {
       kittensStore.fetchInitialKittens().then(() => {
         applyFiltersAndSorting();
-        getCarouselKittens();
       });
     });
 
@@ -268,15 +262,6 @@ export default defineComponent({
       searchTerm.value = search;
     };
 
-    const getCarouselKittens = () => {
-      const kittensSortedByAge: Kitten[] = [...kittens.value].sort(
-        (a, b) => parseInt(a.age) - parseInt(b.age)
-      );
-      carouselKittens.value.kittens = kittensSortedByAge
-        .slice(0, 4)
-        .map((kitten: Kitten) => ({ ...kitten }));
-    };
-
     watch(
       [sortOptions, filterOptions, searchTerm, isSortResetting, kittens],
       () => {
@@ -288,7 +273,6 @@ export default defineComponent({
     return {
       visibleKittens,
       showButton,
-      carouselKittens,
       isModalOpen,
       isDeleteModalOpen,
       isDeleteMode,
@@ -298,7 +282,6 @@ export default defineComponent({
       handleOnSortChange,
       handleOnFilterCheck,
       handleOnSearchInput,
-      getCarouselKittens,
       openCreateModal,
       openEditModal,
       openDeleteModal,
