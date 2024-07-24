@@ -128,15 +128,12 @@ export default defineComponent({
     };
 
     const openDeleteModal = (kitten: Kitten) => {
-      console.log('DELETE kitten', kitten);
-
       selectedKitten.value = { ...kitten };
       isDeleteMode.value = true;
       isDeleteModalOpen.value = true;
     };
 
     const openAdoptModal = (kitten: Kitten) => {
-      console.log('kitten', kitten);
       selectedKitten.value = { ...kitten };
       isDeleteMode.value = false;
       isDeleteModalOpen.value = true;

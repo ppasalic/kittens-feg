@@ -55,7 +55,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const formData = ref<Kitten>({ ...props.kitten });
 
-    console.log('kitten ', { ...props.kitten });
     watch(
       () => props.kitten,
       (newKitten: Kitten) => {
