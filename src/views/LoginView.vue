@@ -62,8 +62,6 @@ export default defineComponent({
       const { username, password } = values;
       formIsValid.value = true;
 
-      console.log(values);
-
       authStore.setUsername(username);
       authStore.setPassword(password);
 

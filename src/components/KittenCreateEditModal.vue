@@ -5,49 +5,66 @@
         <h2>{{ isEditMode ? 'Edit Kitten' : 'Create Kitten' }}</h2>
         <button class="modal-close" @click="closeModal">&times;</button>
       </div>
-      <form @submit.prevent="handleSubmit">
+      <VeeForm @submit="handleOnSubmit" :validation-schema="createEditKittenSchema">
         <div class="form-group">
-          <label for="kittenName">Name:</label>
-          <input
-            id="kittenName"
+          <label for="name">Name</label>
+          <VeeField
+            id="name"
+            name="name"
             v-model="formData.name"
+            :bails="false"
             type="text"
+            :rules="createEditKittenSchema.name"
             placeholder="Enter kitten's name"
-            required
           />
+          <ErrorMessage class="error-message" name="name" />
         </div>
         <div class="form-group">
-          <label for="kittenImage">Image URL:</label>
-          <input
-            id="kittenImage"
+          <label for="imageUrl">Image URL</label>
+          <VeeField
+            id="imageUrl"
+            name="imageUrl"
             v-model="formData.image"
+            :bails="false"
             type="text"
+            :rules="createEditKittenSchema.imageUrl"
             placeholder="Enter image URL"
-            required
           />
+          <ErrorMessage class="error-message" name="imageUrl" />
         </div>
         <div class="form-group">
-          <label for="kittenColor">Color:</label>
-          <select id="kittenColor" v-model="formData.color" required>
+          <label for="kittenColor">Color</label>
+          <VeeField
+            id="kittenColor"
+            name="color"
+            v-model="formData.color"
+            as="select"
+            :rules="createEditKittenSchema.color"
+          >
             <option v-for="color in uniqueKittenColors" :key="color" :value="color">
               {{ color }}
             </option>
-          </select>
+          </VeeField>
+          <ErrorMessage class="error-message" name="color" />
         </div>
         <div class="form-group">
-          <label for="kittenAge">Age:</label>
-          <input
-            id="kittenAge"
+          <label for="age">Age</label>
+          <VeeField
+            id="age"
+            name="age"
             v-model="formData.age"
+            :bails="false"
             type="text"
+            :rules="createEditKittenSchema.age"
             placeholder="Enter age"
             required
           />
+          <ErrorMessage class="error-message" name="age" />
         </div>
         <div class="form-group">
           <button type="submit">{{ isEditMode ? 'Save Changes' : 'Add Kitten' }}</button>
         </div>
-      </form>
+      </VeeForm>
     </div>
   </div>
 </template>
@@ -57,6 +74,16 @@ import { uniqueKittenColors } from '../data/kittenColors';
 import type { Kitten } from '../views/HomeView.vue';
 
 export default defineComponent({
+  data() {
+    return {
+      createEditKittenSchema: {
+        name: 'required|min:3|max:30|alpha_spaces',
+        imageUrl: 'required|max:50|image_url',
+        color: 'required|not_one_of:Select kitten color',
+        age: 'required|max:20|age_format'
+      }
+    };
+  },
   props: {
     isOpen: {
       type: Boolean,
@@ -88,7 +115,7 @@ export default defineComponent({
       { immediate: true }
     );
 
-    const handleSubmit = () => {
+    const handleOnSubmit = () => {
       emit('submit', formData.value);
       closeModal();
     };
@@ -100,7 +127,7 @@ export default defineComponent({
     return {
       formData,
       uniqueKittenColors,
-      handleSubmit,
+      handleOnSubmit,
       closeModal,
       isEditMode
     };
