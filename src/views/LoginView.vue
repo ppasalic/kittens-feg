@@ -13,20 +13,21 @@
             :rules="loginSchema.username"
             placeholder="Enter username"
           />
-          <ErrorMessage class="text-red-500" name="username" />
+          <ErrorMessage class="error-message" name="username" />
         </div>
         <div class="form-group">
           <label for="password">Password</label>
           <VeeField
-            type="text"
+            type="password"
             :bails="false"
             id="password"
             name="password"
             :rules="loginSchema.password"
             placeholder="Enter password"
           />
-          <ErrorMessage class="text-red-500" name="password" />
+          <ErrorMessage class="error-message" name="password" />
         </div>
+        <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
 
         <button type="submit">Login</button>
       </VeeForm>
@@ -54,7 +55,7 @@ export default defineComponent({
   setup() {
     const authStore = useAuthStore();
     const router = useRouter();
-
+    const errorMessage = ref<string>('');
     const formIsValid = ref<boolean>(false);
 
     const onSubmit = (values) => {
@@ -68,11 +69,14 @@ export default defineComponent({
 
       if (authStore.authenticate()) {
         router.push({ name: 'Home' });
+      } else {
+        errorMessage.value = 'Invalid username or password';
       }
     };
 
     return {
       formIsValid,
+      errorMessage,
       onSubmit
     };
   }
