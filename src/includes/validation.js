@@ -25,7 +25,6 @@ export default {
       }
 
       const requiredPath = '/public/assets/images';
-      const validExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
 
       if (!value.includes(requiredPath)) {
         return `The URL must contain '${requiredPath}'.`;
@@ -42,9 +41,9 @@ export default {
 
       const filename = pathAfterRequired.split('/').pop();
 
-      const hasValidExtension = validExtensions.some((ext) => filename.endsWith(ext));
+      const hasValidExtension = filename.endsWith('.jpg');
       if (!filename || !hasValidExtension) {
-        return `The URL must have a valid filename and end with one of the following extensions: ${validExtensions.join(', ')}.`;
+        return `The URL must have a valid filename and end with .jpg extension.`;
       }
 
       const fileBaseName = filename.slice(0, filename.lastIndexOf('.'));
