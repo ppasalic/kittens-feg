@@ -91,12 +91,8 @@ export default defineComponent({
   },
   setup() {
     const kittensStore = useKittensStore();
-    const filteredKittens = ref<Kitten[]>([]);
-    const visibleKittens = ref<Kitten[]>([]);
-    const showButton = ref<boolean>(false);
     const sortOptions = ref<SortOptions>({ sortCriteria: 'age', sortOrder: 'asc' });
     const showMoreCards = ref<number>(20);
-    const isSortResetting = ref<boolean>(false);
     const filterOptions = ref<FilterOptions>({ filters: [] });
     const searchTerm = ref<SearchTerm>({ searchTerm: '' });
     const isModalOpen = ref<boolean>(false);
@@ -105,10 +101,78 @@ export default defineComponent({
     const kittens = computed(() => kittensStore.kittens);
     const isDeleteMode = ref<boolean>(false);
 
-    onMounted(() => {
-      kittensStore.fetchInitialKittens().then(() => {
-        applyFiltersAndSorting();
+    const filteredKittens = computed(() => {
+      if (searchTerm.value.searchTerm.trim() !== '') {
+        return kittens.value.filter((kitten: Kitten) => {
+          const searchWord = searchTerm.value.searchTerm.toLowerCase();
+          return kitten.name.toLowerCase().includes(searchWord);
+        });
+      }
+
+      return kittens.value.filter((kitten: Kitten) => {
+        const ageInMonths = parseInt(kitten.age.split(' ')[0]);
+        const meetsAgeCriteria =
+          (filterOptions.value.filters.includes('youngerThan6Months') && ageInMonths < 6) ||
+          (filterOptions.value.filters.includes('youngerThan12Months') && ageInMonths < 12);
+        const meetsColorCriteria =
+          filterOptions.value.filters.includes('blackColor') && kitten.color === 'Black';
+
+        if (filterOptions.value.filters.length === 0) {
+          return true;
+        }
+
+        if (
+          filterOptions.value.filters.includes('youngerThan6Months') &&
+          filterOptions.value.filters.includes('blackColor')
+        ) {
+          return ageInMonths < 6 && kitten.color === 'Black';
+        }
+
+        if (
+          filterOptions.value.filters.includes('youngerThan12Months') &&
+          filterOptions.value.filters.includes('blackColor')
+        ) {
+          return ageInMonths < 12 && kitten.color === 'Black';
+        }
+
+        if (filterOptions.value.filters.includes('youngerThan6Months')) {
+          return ageInMonths < 6;
+        }
+
+        if (filterOptions.value.filters.includes('youngerThan12Months')) {
+          return ageInMonths < 12;
+        }
+
+        if (filterOptions.value.filters.includes('blackColor')) {
+          return kitten.color === 'Black';
+        }
+
+        return meetsAgeCriteria || meetsColorCriteria;
       });
+    });
+
+    const sortedKittens = computed(() => {
+      const { sortCriteria, sortOrder } = sortOptions.value;
+      return [...filteredKittens.value].sort((a, b) => {
+        if (sortCriteria === 'name') {
+          return sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+        } else {
+          return sortOrder === 'asc'
+            ? parseInt(a.age) - parseInt(b.age)
+            : parseInt(b.age) - parseInt(a.age);
+        }
+      });
+    });
+
+    const visibleKittens = computed(() => {
+      const currentLength = showMoreCards.value;
+      return sortedKittens.value.slice(0, currentLength);
+    });
+
+    const showButton = computed(() => visibleKittens.value.length < filteredKittens.value.length);
+
+    onMounted(() => {
+      kittensStore.fetchInitialKittens();
     });
 
     const openCreateModal = () => {
@@ -155,95 +219,14 @@ export default defineComponent({
       closeDeleteModal();
     };
 
-    const resetKittens = () => {
-      kittensStore.resetKittens();
-    };
-
-    const updateVisibleKittens = (isSortByOrFilterbyClicked: boolean = false) => {
-      const currentLength = isSortByOrFilterbyClicked ? 0 : visibleKittens.value.length;
-      visibleKittens.value = filteredKittens.value.slice(0, currentLength + showMoreCards.value);
-
-      if (!isSortByOrFilterbyClicked) {
-        sortOptions.value.sortOrder = 'asc';
-        sortOptions.value.sortCriteria = 'age';
-      }
-
-      showButton.value = visibleKittens.value.length < filteredKittens.value.length;
-    };
-
-    const sortKittens = () => {
-      const { sortCriteria, sortOrder } = sortOptions.value;
-
-      filteredKittens.value.sort((a, b) => {
-        if (sortCriteria === 'name') {
-          return sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
-        } else {
-          return sortOrder === 'asc'
-            ? parseInt(a.age) - parseInt(b.age)
-            : parseInt(b.age) - parseInt(a.age);
-        }
-      });
-    };
-
-    const filterKittens = () => {
-      if (searchTerm.value.searchTerm.trim() !== '') {
-        filteredKittens.value = kittens.value.filter((kitten: Kitten) => {
-          const searchWord = searchTerm.value.searchTerm.toLowerCase();
-          return kitten.name.toLowerCase().includes(searchWord);
-        });
-      } else {
-        // Apply previous filters when the search term is empty
-        filteredKittens.value = kittens.value.filter((kitten: Kitten) => {
-          const ageInMonths = parseInt(kitten.age.split(' ')[0]);
-          const meetsAgeCriteria =
-            (filterOptions.value.filters.includes('youngerThan6Months') && ageInMonths < 6) ||
-            (filterOptions.value.filters.includes('youngerThan12Months') && ageInMonths < 12);
-          const meetsColorCriteria =
-            filterOptions.value.filters.includes('blackColor') && kitten.color === 'Black';
-
-          if (filterOptions.value.filters.length === 0) {
-            return true;
-          }
-
-          if (
-            filterOptions.value.filters.includes('youngerThan6Months') &&
-            filterOptions.value.filters.includes('blackColor')
-          ) {
-            return ageInMonths < 6 && kitten.color === 'Black';
-          }
-
-          if (
-            filterOptions.value.filters.includes('youngerThan12Months') &&
-            filterOptions.value.filters.includes('blackColor')
-          ) {
-            return ageInMonths < 12 && kitten.color === 'Black';
-          }
-
-          if (filterOptions.value.filters.includes('youngerThan6Months')) {
-            return ageInMonths < 6;
-          }
-
-          if (filterOptions.value.filters.includes('youngerThan12Months')) {
-            return ageInMonths < 12;
-          }
-
-          if (filterOptions.value.filters.includes('blackColor')) {
-            return kitten.color === 'Black';
-          }
-
-          return meetsAgeCriteria || meetsColorCriteria;
-        });
-      }
-    };
-
-    const applyFiltersAndSorting = () => {
-      filterKittens();
-      sortKittens();
-      updateVisibleKittens(true);
+    const resetSortOptions = () => {
+      sortOptions.value.sortCriteria = 'age';
+      sortOptions.value.sortOrder = 'asc';
     };
 
     const handleOnShowMoreClick = () => {
-      updateVisibleKittens();
+      showMoreCards.value += 20;
+      resetSortOptions();
     };
 
     const handleOnSortChange = (filters: SortOptions) => {
@@ -258,17 +241,10 @@ export default defineComponent({
       searchTerm.value = search;
     };
 
-    watch(
-      [sortOptions, filterOptions, searchTerm, isSortResetting, kittens],
-      () => {
-        applyFiltersAndSorting();
-      },
-      { deep: true }
-    );
-
     return {
       visibleKittens,
       showButton,
+      sortOptions,
       isModalOpen,
       isDeleteModalOpen,
       isDeleteMode,
@@ -285,8 +261,7 @@ export default defineComponent({
       closeModal,
       closeDeleteModal,
       handleModalSubmit,
-      handleDeleteKitten,
-      resetKittens
+      handleDeleteKitten
     };
   }
 });
