@@ -186,7 +186,13 @@ export default defineComponent({
     };
 
     const filterKittens = () => {
-      if (filterOptions.value.filters.length > 0 || searchTerm.value) {
+      if (searchTerm.value.searchTerm.trim() !== '') {
+        filteredKittens.value = kittens.value.filter((kitten: Kitten) => {
+          const searchWord = searchTerm.value.searchTerm.toLowerCase();
+          return kitten.name.toLowerCase().includes(searchWord);
+        });
+      } else {
+        // Apply previous filters when the search term is empty
         filteredKittens.value = kittens.value.filter((kitten: Kitten) => {
           const ageInMonths = parseInt(kitten.age.split(' ')[0]);
           const meetsAgeCriteria =
@@ -195,13 +201,7 @@ export default defineComponent({
           const meetsColorCriteria =
             filterOptions.value.filters.includes('blackColor') && kitten.color === 'Black';
 
-          const searchWord = searchTerm.value.searchTerm.toLowerCase();
-          const matchesSearchTerm = kitten.name.toLowerCase().includes(searchWord);
-
-          if (
-            filterOptions.value.filters.length === 0 &&
-            searchTerm.value.searchTerm.trim() === ''
-          ) {
+          if (filterOptions.value.filters.length === 0) {
             return true;
           }
 
@@ -209,34 +209,30 @@ export default defineComponent({
             filterOptions.value.filters.includes('youngerThan6Months') &&
             filterOptions.value.filters.includes('blackColor')
           ) {
-            return ageInMonths < 6 && kitten.color === 'Black' && matchesSearchTerm;
+            return ageInMonths < 6 && kitten.color === 'Black';
           }
 
           if (
             filterOptions.value.filters.includes('youngerThan12Months') &&
             filterOptions.value.filters.includes('blackColor')
           ) {
-            return ageInMonths < 12 && kitten.color === 'Black' && matchesSearchTerm;
+            return ageInMonths < 12 && kitten.color === 'Black';
           }
 
           if (filterOptions.value.filters.includes('youngerThan6Months')) {
-            return ageInMonths < 6 && matchesSearchTerm;
+            return ageInMonths < 6;
           }
 
           if (filterOptions.value.filters.includes('youngerThan12Months')) {
-            return ageInMonths < 12 && matchesSearchTerm;
+            return ageInMonths < 12;
           }
 
           if (filterOptions.value.filters.includes('blackColor')) {
-            return kitten.color === 'Black' && matchesSearchTerm;
+            return kitten.color === 'Black';
           }
 
-          return meetsAgeCriteria || meetsColorCriteria || matchesSearchTerm;
+          return meetsAgeCriteria || meetsColorCriteria;
         });
-      } else if (filterOptions.value.filters.length < 0) {
-        filteredKittens.value = [...kittens.value];
-      } else {
-        filteredKittens.value = [...visibleKittens.value];
       }
     };
 
