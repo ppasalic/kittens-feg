@@ -71,7 +71,7 @@
 <script lang="ts">
 import { defineComponent, ref, type PropType, watch, computed } from 'vue';
 import { uniqueKittenColors } from '../data/kittenColors';
-import type { Kitten } from '../views/HomeView.vue';
+import type Kitten from '../types/Kitten';
 
 export default defineComponent({
   data() {

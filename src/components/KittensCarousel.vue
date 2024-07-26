@@ -32,10 +32,10 @@
 
 <script lang="ts">
 import { defineComponent, ref, onMounted, onUnmounted, computed } from 'vue';
-import type { Kitten } from '../views/HomeView.vue';
 import { ArrowLeftCircleIcon, ArrowRightCircleIcon } from '@heroicons/vue/24/solid';
 import KittenCarouselModal from '../components/KittenCarouselModal.vue';
 import { useKittensStore } from '../stores/kittensStore';
+import type Kitten from '../types/Kitten';
 
 export default defineComponent({
   name: 'KittensCarousel',

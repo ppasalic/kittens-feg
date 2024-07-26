@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted, defineComponent, watch, computed } from 'vue';
+import { ref, onMounted, defineComponent, computed } from 'vue';
 import KittenCard from '../components/KittenCard.vue';
 import KittensSortBy from '../components/KittensSortBy.vue';
 import KittensFilterBy from '../components/KittensFilterBy.vue';
@@ -55,14 +55,7 @@ import KittenCreateEditModal from '../components/KittenCreateEditModal.vue';
 import KittenDeleteModal from '../components/KittenDeleteModal.vue';
 import { useKittensStore } from '../stores/kittensStore';
 import { ArrowDownIcon, PlusIcon } from '@heroicons/vue/24/solid';
-
-export interface Kitten {
-  id: number;
-  name: string;
-  color: string;
-  age: string;
-  image?: string;
-}
+import type Kitten from '../types/Kitten';
 
 export interface SortOptions {
   sortCriteria: 'name' | 'age';

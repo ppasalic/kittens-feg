@@ -28,7 +28,7 @@
 <script lang="ts">
 import { defineComponent, type PropType } from 'vue';
 import { PencilSquareIcon, TrashIcon, HeartIcon } from '@heroicons/vue/24/solid';
-import type { Kitten } from '../views/HomeView.vue';
+import type Kitten from '../types/Kitten';
 
 export default defineComponent({
   components: {

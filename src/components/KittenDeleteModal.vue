@@ -21,14 +21,7 @@
 
 <script lang="ts">
 import { defineComponent, ref, type PropType, watch } from 'vue';
-
-interface Kitten {
-  id: number;
-  name: string;
-  color: string;
-  age: string;
-  image?: string;
-}
+import type Kitten from '../types/Kitten';
 
 export default defineComponent({
   props: {
