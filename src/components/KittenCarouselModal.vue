@@ -25,6 +25,11 @@ export default defineComponent({
   components: {
     HeartIcon
   },
+  methods: {
+    handleOnClose() {
+      this.$emit('close');
+    }
+  },
   props: {
     isOpen: {
       type: Boolean,
@@ -43,16 +48,7 @@ export default defineComponent({
       })
     }
   },
-
-  setup(__, { emit }) {
-    const handleOnClose = () => {
-      emit('close');
-    };
-
-    return {
-      handleOnClose
-    };
-  }
+  emits: ['close', 'adopt']
 });
 </script>
 <style lang="scss">

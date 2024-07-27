@@ -1,9 +1,9 @@
 <template>
-  <div v-if="isOpen" class="modal-overlay" @click.self="closeModal">
+  <div v-if="isOpen" class="modal-overlay" @click.self="handleOnClose">
     <div class="modal-content">
       <div class="modal-header">
         <h2>{{ isEditMode ? 'Edit Kitten' : 'Create Kitten' }}</h2>
-        <button class="modal-close" @click="closeModal">&times;</button>
+        <button class="modal-close" @click="handleOnClose">&times;</button>
       </div>
       <VeeForm @submit="handleOnSubmit" :validation-schema="createEditKittenSchema">
         <div class="form-group">
@@ -27,7 +27,7 @@
             v-model="formData.image"
             :bails="false"
             type="text"
-            :rules="createEditKittenSchema.imageUrl"
+            :rules="`${createEditKittenSchema.imageUrl}|filename_matches_kitten_name:${formData.name}`"
             placeholder="Enter image URL"
           />
           <ErrorMessage class="error-message" name="imageUrl" />
@@ -41,7 +41,7 @@
             as="select"
             :rules="createEditKittenSchema.color"
           >
-            <option v-for="color in uniqueKittenColors" :key="color" :value="color">
+            <option v-for="color in kittenColors.value" :key="color" :value="color">
               {{ color }}
             </option>
           </VeeField>
@@ -62,25 +62,31 @@
           <ErrorMessage class="error-message" name="age" />
         </div>
         <div class="form-group">
-          <button type="submit">{{ isEditMode ? 'Save Changes' : 'Add Kitten' }}</button>
+          <button type="submit">
+            {{ isEditMode ? 'Save Changes' : 'Add Kitten' }}
+          </button>
         </div>
       </VeeForm>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, type PropType, watch, computed } from 'vue';
-import { uniqueKittenColors } from '../data/kittenColors';
+import { defineComponent, ref, watch, type PropType } from 'vue';
 import type Kitten from '../types/Kitten';
+import { KittenColors } from '../enums/KittenColors';
 
 export default defineComponent({
   data() {
     return {
       createEditKittenSchema: {
         name: 'required|min:3|max:30|alpha_spaces',
-        imageUrl: 'required|max:50|image_url',
+        imageUrl: `required|max:50|image_url|filename_matches_kitten_name:@name`, // Rule with placeholder
         color: 'required|not_one_of:Select kitten color',
         age: 'required|max:20|age_format'
+      },
+      kittenColors: {
+        type: Object as PropType<KittenColors>,
+        value: Object.values(KittenColors)
       }
     };
   },
@@ -101,11 +107,24 @@ export default defineComponent({
       })
     }
   },
-  emits: ['close', 'submit'],
-  setup(props, { emit }) {
-    const formData = ref<Kitten>({ ...props.kitten });
 
-    const isEditMode = computed(() => !!props.kitten && props.kitten.id !== 0);
+  computed: {
+    isEditMode() {
+      return !!this.kitten && this.kitten.id !== 0;
+    }
+  },
+  methods: {
+    handleOnSubmit() {
+      this.$emit('submit', this.formData);
+      this.handleOnClose();
+    },
+    handleOnClose() {
+      this.$emit('close');
+    }
+  },
+  emits: ['close', 'submit'],
+  setup(props) {
+    const formData = ref<Kitten>({ ...props.kitten });
 
     watch(
       () => props.kitten,
@@ -115,21 +134,8 @@ export default defineComponent({
       { immediate: true }
     );
 
-    const handleOnSubmit = () => {
-      emit('submit', formData.value);
-      closeModal();
-    };
-
-    const closeModal = () => {
-      emit('close');
-    };
-
     return {
-      formData,
-      uniqueKittenColors,
-      handleOnSubmit,
-      closeModal,
-      isEditMode
+      formData
     };
   }
 });

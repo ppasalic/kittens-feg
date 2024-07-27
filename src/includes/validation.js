@@ -24,31 +24,46 @@ export default {
         return true;
       }
 
-      const requiredPath = '/public/assets/images';
+      const requiredPath = '/public/assets/images/';
 
-      if (!value.includes(requiredPath)) {
-        return `The URL must contain '${requiredPath}'.`;
-      }
+        if (!value.includes(requiredPath)) {
+          return `The URL must contain '${requiredPath}'.`;
+        }
 
-      const pathAfterRequired = value.split(requiredPath)[1];
+        const pathAfterRequired = value.split(requiredPath)[1];
 
-      if (
-        !pathAfterRequired ||
+        if (
+          !pathAfterRequired ||
         pathAfterRequired.lastIndexOf('/') === pathAfterRequired.length - 1
-      ) {
-        return `The URL must contain a filename after '${requiredPath}'.`;
-      }
+        ) {
+          return `The URL must contain a filename after '${requiredPath}'.`;
+        }
 
       const filename = pathAfterRequired.split('/').pop();
 
       const hasValidExtension = filename.endsWith('.jpg');
-      if (!filename || !hasValidExtension) {
-        return `The URL must have a valid filename and end with .jpg extension.`;
-      }
+        if (!filename || !hasValidExtension) {
+          return `The URL must have a valid filename and end with .jpg extension.`;
+        }
 
       const fileBaseName = filename.slice(0, filename.lastIndexOf('.'));
-      if (!fileBaseName || fileBaseName.length === 0) {
-        return `The URL must have a valid filename before the extension.`;
+        if (!fileBaseName || fileBaseName.length === 0) {
+          return `The URL must have a valid filename before the extension.`;
+        }
+
+        return true;
+      });
+
+    defineRule('filename_matches_kitten_name', (value, [kittenName]) => {
+      if (!value || !kittenName) {
+        return true;
+      }
+
+      const filename = value.split('/').pop()?.split('.')[0];
+      const formattedKittenName = kittenName.replace(/\s+/g, '_');
+
+      if (filename !== formattedKittenName) {
+        return `The filename must be the same as the kitten's name: ${formattedKittenName}.`;
       }
 
       return true;
@@ -85,6 +100,7 @@ export default {
           alpha_spaces: `This field must only contain alphabetic characters.`,
           not_one_of: `This field must not be one of the following: ${ctx.rule.params}.`,
           image_url: `The URL must contain '/public/assets/images' and end with a valid image extension.`,
+          filename_matches_kitten_name: `The filename must be the same as the kitten's name.`,
           age_format: `Age must be in the format "X month(s)", where X is a number.`
         };
 
