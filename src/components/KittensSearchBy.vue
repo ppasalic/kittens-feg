@@ -23,9 +23,9 @@ export default defineComponent({
     const searchTerm = ref<string>('');
 
     const handleOnSearchInput = () => {
-      emit('search-by', {
-        searchTerm: searchTerm.value
-      });
+      emit('search-by', 
+         searchTerm.value
+      );
     };
     watch(searchTerm, handleOnSearchInput);
 
