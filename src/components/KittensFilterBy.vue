@@ -1,58 +1,37 @@
 <template>
   <div class="filter-by-container">
-    <div class="filter-by-checkbox">
+    <div class="filter-by-checkbox" v-for="filter in Object.values(FilterOptionsEnum)" :key="filter">
       <input
         type="checkbox"
-        id="youngerThan6Months"
-        value="youngerThan6Months"
-        v-model="filters"
+        :id="filter"
+        :value="filter"
+        v-model="kittensFilters"
         @change="handleOnFilterCheck"
       />
-      <label for="youngerThan6Months"> Younger than 6 months </label>
-    </div>
-    <div class="filter-by-checkbox">
-      <input
-        type="checkbox"
-        id="youngerThan12Months"
-        value="youngerThan12Months"
-        v-model="filters"
-        @change="handleOnFilterCheck"
-      />
-      <label for="youngerThan12Months"> Younger than 12 months </label>
-    </div>
-    <div class="filter-by-checkbox">
-      <input
-        type="checkbox"
-        id="blackColor"
-        value="blackColor"
-        v-model="filters"
-        @change="handleOnFilterCheck"
-      />
-      <label for="blackColor"> Black color </label>
+      <label :for="filter"> {{ filter }} </label>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch } from 'vue';
+import { FilterOptionsEnum } from '../enums/FilterOptionsEnum';
+import type FilterOptions from '../types/FilterOptions';
 
 export default defineComponent({
   name: 'KittensFilterBy',
   emits: ['filter-by'],
   setup(_, { emit }) {
-    const filters = ref<string[]>([]);
-
+    const kittensFilters = ref<FilterOptions[]>([]);
     const handleOnFilterCheck = () => {
-      emit('filter-by', {
-        filters: filters.value
-      });
+      emit('filter-by', kittensFilters.value);
     };
 
-    watch(filters, handleOnFilterCheck, {
-      deep: true
+    watch(kittensFilters, handleOnFilterCheck, {
+      immediate: true
     });
 
-    return { filters, handleOnFilterCheck };
+    return { kittensFilters, FilterOptionsEnum, handleOnFilterCheck };
   }
 });
 </script>

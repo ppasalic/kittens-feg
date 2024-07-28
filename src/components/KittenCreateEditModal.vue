@@ -73,20 +73,20 @@
 <script lang="ts">
 import { defineComponent, ref, watch, type PropType } from 'vue';
 import type Kitten from '../types/Kitten';
-import { KittenColors } from '../enums/KittenColors';
+import { KittenColorsEnum } from '../enums/KittenColorsEnum';
 
 export default defineComponent({
   data() {
     return {
       createEditKittenSchema: {
         name: 'required|min:3|max:30|alpha_spaces',
-        imageUrl: `required|max:50|image_url|filename_matches_kitten_name:@name`, // Rule with placeholder
+        imageUrl: `required|max:50|image_url|filename_matches_kitten_name:@name`,
         color: 'required|not_one_of:Select kitten color',
         age: 'required|max:20|age_format'
       },
       kittenColors: {
-        type: Object as PropType<KittenColors>,
-        value: Object.values(KittenColors)
+        type: Object as PropType<KittenColorsEnum>,
+        value: Object.values(KittenColorsEnum)
       }
     };
   },

@@ -56,19 +56,14 @@ import KittenDeleteModal from '../components/KittenDeleteModal.vue';
 import { useKittensStore } from '../stores/kittensStore';
 import { ArrowDownIcon, PlusIcon } from '@heroicons/vue/24/solid';
 import type Kitten from '../types/Kitten';
+import type { SortOptions } from '../types/SortOptions';
+import { FilterOptionsEnum } from '../enums/FilterOptionsEnum';
+import { KittenColorsEnum } from '../enums/KittenColorsEnum';
+import type FilterOptions from '../types/FilterOptions';
+import SortCriteriaEnum from '../enums/SortCriteriaEnum';
+import SortOrderEnum from '../enums/SortOrderEnum';
 
-export interface SortOptions {
-  sortCriteria: 'name' | 'age';
-  sortOrder: 'asc' | 'desc';
-}
-
-interface FilterOptions {
-  filters: string[];
-}
-
-interface SearchTerm {
-  searchTerm: string;
-}
+const defaultSortOptions = { sortCriteria: SortCriteriaEnum.Age, sortOrder: SortOrderEnum.Ascending}
 
 export default defineComponent({
   components: {
@@ -83,11 +78,12 @@ export default defineComponent({
     PlusIcon
   },
   setup() {
+
     const kittensStore = useKittensStore();
-    const sortOptions = ref<SortOptions>({ sortCriteria: 'age', sortOrder: 'asc' });
+    const sortOptions = ref<SortOptions>(defaultSortOptions);
     const showMoreCards = ref<number>(20);
-    const filterOptions = ref<FilterOptions>({ filters: [] });
-    const searchTerm = ref<SearchTerm>({ searchTerm: '' });
+    const filterOptions = ref<FilterOptions[]>([]);
+    const searchTerm = ref<string>("");
     const isModalOpen = ref<boolean>(false);
     const isDeleteModalOpen = ref<boolean>(false);
     const selectedKitten = ref<Kitten>({ id: 0, name: '', color: '', age: '', image: '' });
@@ -95,9 +91,9 @@ export default defineComponent({
     const isDeleteMode = ref<boolean>(false);
 
     const filteredKittens = computed(() => {
-      if (searchTerm.value.searchTerm.trim() !== '') {
+      if (searchTerm.value.trim() !== '') {
         return kittens.value.filter((kitten: Kitten) => {
-          const searchWord = searchTerm.value.searchTerm.toLowerCase();
+          const searchWord = searchTerm.value.toLowerCase();
           return kitten.name.toLowerCase().includes(searchWord);
         });
       }
@@ -105,52 +101,47 @@ export default defineComponent({
       return kittens.value.filter((kitten: Kitten) => {
         const ageInMonths = parseInt(kitten.age.split(' ')[0]);
         const meetsAgeCriteria =
-          (filterOptions.value.filters.includes('youngerThan6Months') && ageInMonths < 6) ||
-          (filterOptions.value.filters.includes('youngerThan12Months') && ageInMonths < 12);
+          (filterOptions.value.includes(FilterOptionsEnum.YoungerThan6Months) && ageInMonths < 6) ||
+          (filterOptions.value.includes(FilterOptionsEnum.YoungerThan12Months) && ageInMonths < 12);
         const meetsColorCriteria =
-          filterOptions.value.filters.includes('blackColor') && kitten.color === 'Black';
+          filterOptions.value.includes(FilterOptionsEnum.BlackColor) && kitten.color === KittenColorsEnum.Black;
 
-        if (filterOptions.value.filters.length === 0) {
+        if (filterOptions.value.length === 0) {
           return true;
         }
 
         if (
-          filterOptions.value.filters.includes('youngerThan6Months') &&
-          filterOptions.value.filters.includes('blackColor')
+          filterOptions.value.includes(FilterOptionsEnum.YoungerThan6Months) &&
+          filterOptions.value.includes(FilterOptionsEnum.BlackColor)
         ) {
-          return ageInMonths < 6 && kitten.color === 'Black';
+          return ageInMonths < 6 && kitten.color === KittenColorsEnum.Black;
         }
 
-        if (
-          filterOptions.value.filters.includes('youngerThan12Months') &&
-          filterOptions.value.filters.includes('blackColor')
-        ) {
-          return ageInMonths < 12 && kitten.color === 'Black';
-        }
 
-        if (filterOptions.value.filters.includes('youngerThan6Months')) {
+        if (filterOptions.value.includes(FilterOptionsEnum.YoungerThan6Months)) {
           return ageInMonths < 6;
         }
 
-        if (filterOptions.value.filters.includes('youngerThan12Months')) {
+        if (filterOptions.value.includes(FilterOptionsEnum.YoungerThan12Months)) {
           return ageInMonths < 12;
         }
 
-        if (filterOptions.value.filters.includes('blackColor')) {
-          return kitten.color === 'Black';
+        if (filterOptions.value.includes(FilterOptionsEnum.BlackColor)) {
+          return kitten.color === KittenColorsEnum.Black;
         }
 
         return meetsAgeCriteria || meetsColorCriteria;
       });
     });
 
-    const sortedKittens = computed(() => {
+    const sortedKittens= computed(() => {
       const { sortCriteria, sortOrder } = sortOptions.value;
+
       return [...filteredKittens.value].sort((a, b) => {
-        if (sortCriteria === 'name') {
-          return sortOrder === 'asc' ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+        if (sortCriteria === SortCriteriaEnum.Name) {
+          return sortOrder === SortOrderEnum.Ascending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
         } else {
-          return sortOrder === 'asc'
+          return sortOrder === SortOrderEnum.Ascending
             ? parseInt(a.age) - parseInt(b.age)
             : parseInt(b.age) - parseInt(a.age);
         }
@@ -213,8 +204,8 @@ export default defineComponent({
     };
 
     const resetSortOptions = () => {
-      sortOptions.value.sortCriteria = 'age';
-      sortOptions.value.sortOrder = 'asc';
+      sortOptions.value.sortCriteria = defaultSortOptions.sortCriteria;
+      sortOptions.value.sortOrder = defaultSortOptions.sortOrder;
     };
 
     const handleOnShowMoreClick = () => {
@@ -222,15 +213,15 @@ export default defineComponent({
       resetSortOptions();
     };
 
-    const handleOnSortChange = (filters: SortOptions) => {
-      sortOptions.value = filters;
+    const handleOnSortChange = (sortValues: SortOptions) => {
+      sortOptions.value = sortValues;
     };
 
-    const handleOnFilterCheck = (filters: FilterOptions) => {
-      filterOptions.value = filters;
+    const handleOnFilterCheck = (filterValues: FilterOptions[]) => {
+      filterOptions.value = filterValues;
     };
 
-    const handleOnSearchInput = (search: SearchTerm) => {
+    const handleOnSearchInput = (search: string) => {
       searchTerm.value = search;
     };
 
