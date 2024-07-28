@@ -1,17 +1,17 @@
 <template>
-  <div v-if="isOpen" class="modal-overlay" @click.self="closeModal">
+  <div v-if="isOpen" class="modal-overlay" @click.self="handleOnClose">
     <div class="modal-content">
       <div class="modal-header">
         <h2>{{ isDeleteMode ? 'Delete Kitten' : 'Adopt Kitten' }}</h2>
-        <button class="modal-close" @click="closeModal">&times;</button>
+        <button class="modal-close" @click="handleOnClose">&times;</button>
       </div>
-      <form @submit.prevent="handleSubmit">
+      <form @submit.prevent="handleOnSubmit">
         <p>
           Are you sure you want to {{ isDeleteMode ? 'delete' : 'adopt' }}
           <strong>{{ kitten.name }}</strong> kitten?
         </p>
         <div class="form-group reject-confirm-controls">
-          <button type="submit" class="reject-btn" @click="closeModal">Reject</button>
+          <button type="submit" class="reject-btn" @click="handleOnClose">Reject</button>
           <button type="submit" class="accept-btn" @click="onSubmit">Confirm</button>
         </div>
       </form>
@@ -44,8 +44,17 @@ export default defineComponent({
       type: Boolean
     }
   },
+  methods: {
+    handleOnSubmit() {
+      this.$emit('submit', this.formData.id);
+      this.handleOnClose();
+    },
+    handleOnClose() {
+      this.$emit('close');
+    }
+  },
   emits: ['close', 'submit'],
-  setup(props, { emit }) {
+  setup(props) {
     const formData = ref<Kitten>({ ...props.kitten });
 
     watch(
@@ -56,19 +65,8 @@ export default defineComponent({
       { immediate: true }
     );
 
-    const handleSubmit = () => {
-      emit('submit', formData.value.id);
-      closeModal();
-    };
-
-    const closeModal = () => {
-      emit('close');
-    };
-
     return {
-      formData,
-      handleSubmit,
-      closeModal
+      formData
     };
   }
 });

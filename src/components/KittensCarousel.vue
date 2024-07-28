@@ -51,11 +51,12 @@ export default defineComponent({
     let autoSlideInterval: NodeJS.Timeout | null = null;
     let autoSlideDirection = ref<'left' | 'right'>('right');
     const kittensStore = useKittensStore();
+
     const carouselKittens = computed(() =>
       [...kittensStore.kittens]
         .sort(
-          (prevKitten: Kitten, nextKitten: Kitten) =>
-            parseInt(prevKitten.age) - parseInt(nextKitten.age)
+          (currentKitten: Kitten, nextKitten: Kitten) =>
+            parseInt(currentKitten.age) - parseInt(nextKitten.age)
         )
         .slice(0, 4)
         .map((kitten) => ({ ...kitten }))

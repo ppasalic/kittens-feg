@@ -63,7 +63,10 @@ import type FilterOptions from '../types/FilterOptions';
 import SortCriteriaEnum from '../enums/SortCriteriaEnum';
 import SortOrderEnum from '../enums/SortOrderEnum';
 
-const defaultSortOptions = { sortCriteria: SortCriteriaEnum.Age, sortOrder: SortOrderEnum.Ascending}
+const defaultSortOptions = {
+  sortCriteria: SortCriteriaEnum.Age,
+  sortOrder: SortOrderEnum.Ascending
+};
 
 export default defineComponent({
   components: {
@@ -78,12 +81,11 @@ export default defineComponent({
     PlusIcon
   },
   setup() {
-
     const kittensStore = useKittensStore();
     const sortOptions = ref<SortOptions>(defaultSortOptions);
     const showMoreCards = ref<number>(20);
     const filterOptions = ref<FilterOptions[]>([]);
-    const searchTerm = ref<string>("");
+    const searchTerm = ref<string>('');
     const isModalOpen = ref<boolean>(false);
     const isDeleteModalOpen = ref<boolean>(false);
     const selectedKitten = ref<Kitten>({ id: 0, name: '', color: '', age: '', image: '' });
@@ -92,19 +94,20 @@ export default defineComponent({
 
     const filteredKittens = computed(() => {
       if (searchTerm.value.trim() !== '') {
-        return kittens.value.filter((kitten: Kitten) => {
+        return [...kittens.value].filter((kitten: Kitten) => {
           const searchWord = searchTerm.value.toLowerCase();
           return kitten.name.toLowerCase().includes(searchWord);
         });
       }
 
-      return kittens.value.filter((kitten: Kitten) => {
-        const ageInMonths = parseInt(kitten.age.split(' ')[0]);
-        const meetsAgeCriteria =
+      return [...kittens.value].filter(({ age, color }: Kitten) => {
+        const ageInMonths = parseInt(age.split(' ')[0]);
+        const ageCriteria =
           (filterOptions.value.includes(FilterOptionsEnum.YoungerThan6Months) && ageInMonths < 6) ||
           (filterOptions.value.includes(FilterOptionsEnum.YoungerThan12Months) && ageInMonths < 12);
-        const meetsColorCriteria =
-          filterOptions.value.includes(FilterOptionsEnum.BlackColor) && kitten.color === KittenColorsEnum.Black;
+        const colorCriteria =
+          filterOptions.value.includes(FilterOptionsEnum.BlackColor) &&
+          color === KittenColorsEnum.Black;
 
         if (filterOptions.value.length === 0) {
           return true;
@@ -114,9 +117,8 @@ export default defineComponent({
           filterOptions.value.includes(FilterOptionsEnum.YoungerThan6Months) &&
           filterOptions.value.includes(FilterOptionsEnum.BlackColor)
         ) {
-          return ageInMonths < 6 && kitten.color === KittenColorsEnum.Black;
+          return ageInMonths < 6 && color === KittenColorsEnum.Black;
         }
-
 
         if (filterOptions.value.includes(FilterOptionsEnum.YoungerThan6Months)) {
           return ageInMonths < 6;
@@ -127,30 +129,32 @@ export default defineComponent({
         }
 
         if (filterOptions.value.includes(FilterOptionsEnum.BlackColor)) {
-          return kitten.color === KittenColorsEnum.Black;
+          return color === KittenColorsEnum.Black;
         }
 
-        return meetsAgeCriteria || meetsColorCriteria;
+        return ageCriteria || colorCriteria;
       });
     });
 
-    const sortedKittens= computed(() => {
+    const sortedKittens = computed(() => {
       const { sortCriteria, sortOrder } = sortOptions.value;
 
-      return [...filteredKittens.value].sort((a, b) => {
+      return [...filteredKittens.value].sort((currentKitten: Kitten, nextKitten: Kitten) => {
         if (sortCriteria === SortCriteriaEnum.Name) {
-          return sortOrder === SortOrderEnum.Ascending ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name);
+          return sortOrder === SortOrderEnum.Ascending
+            ? currentKitten.name.localeCompare(nextKitten.name)
+            : nextKitten.name.localeCompare(currentKitten.name);
         } else {
           return sortOrder === SortOrderEnum.Ascending
-            ? parseInt(a.age) - parseInt(b.age)
-            : parseInt(b.age) - parseInt(a.age);
+            ? parseInt(currentKitten.age) - parseInt(nextKitten.age)
+            : parseInt(nextKitten.age) - parseInt(currentKitten.age);
         }
       });
     });
 
     const visibleKittens = computed(() => {
       const currentLength = showMoreCards.value;
-      return sortedKittens.value.slice(0, currentLength);
+      return [...sortedKittens.value].slice(0, currentLength);
     });
 
     const showButton = computed(() => visibleKittens.value.length < filteredKittens.value.length);
