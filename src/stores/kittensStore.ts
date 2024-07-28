@@ -1,4 +1,4 @@
-import type { Kitten } from '@/views/HomeView.vue';
+import type Kitten from '../types/Kitten';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
@@ -13,10 +13,10 @@ export const useKittensStore = defineStore('kittensStore', () => {
       const updatedKittens = await Promise.all(
         data.kittens.map(async (kitten: Kitten) => {
           try {
-            const imagePath = await import(`@assets/images/${kitten.name}.jpg`);
+            const imagePath = `/assets/images/${kitten.name}.jpg`;
             return {
               ...kitten,
-              image: imagePath.default || ''
+              image: imagePath
             };
           } catch (e) {
             return {
